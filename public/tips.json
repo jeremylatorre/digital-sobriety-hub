@@ -1,0 +1,64 @@
+{
+  "tips": [
+    {
+      "id": "tip-1",
+      "content": "Un site web moyen émet environ 1,76g de CO₂ par page vue. Optimiser vos images peut réduire cela de 70%.",
+      "source": "Website Carbon"
+    },
+    {
+      "id": "tip-2",
+      "content": "80% de la consommation énergétique d'un site web provient du transfert de données. Chaque Ko compte !",
+      "source": "The Shift Project"
+    },
+    {
+      "id": "tip-3",
+      "content": "Utiliser des formats d'images modernes comme WebP ou AVIF peut réduire leur poids de 25 à 50% sans perte de qualité visible.",
+      "source": "Web.dev"
+    },
+    {
+      "id": "tip-4",
+      "content": "Un site accessible est un site sobre : moins de JavaScript, HTML sémantique, et navigation clavier réduisent la complexité.",
+      "source": "W3C"
+    },
+    {
+      "id": "tip-5",
+      "content": "Le lazy loading des images peut réduire jusqu'à 50% le temps de chargement initial d'une page.",
+      "source": "Google PageSpeed"
+    },
+    {
+      "id": "tip-6",
+      "content": "Chaque requête HTTP a un coût énergétique. Combiner et minifier vos fichiers CSS/JS réduit l'impact environnemental.",
+      "source": "GreenIT"
+    },
+    {
+      "id": "tip-7",
+      "content": "Les polices web peuvent peser jusqu'à 500KB. Privilégiez les polices système ou limitez-vous à 2 variantes maximum.",
+      "source": "Web Performance"
+    },
+    {
+      "id": "tip-8",
+      "content": "Un code propre et maintenable, c'est aussi un code sobre : moins de dépendances = bundle plus léger = moins d'énergie.",
+      "source": "Clean Code"
+    },
+    {
+      "id": "tip-9",
+      "content": "Désactiver l'autoplay des vidéos peut économiser jusqu'à 5MB de données par utilisateur et améliorer l'accessibilité.",
+      "source": "Mozilla"
+    },
+    {
+      "id": "tip-10",
+      "content": "Un ratio de contraste de 4.5:1 minimum garantit la lisibilité pour 99% des utilisateurs et réduit la fatigue visuelle.",
+      "source": "WCAG 2.1"
+    },
+    {
+      "id": "tip-11",
+      "content": "Mettre en cache efficacement vos ressources peut réduire de 80% le nombre de requêtes lors des visites répétées.",
+      "source": "HTTP Archive"
+    },
+    {
+      "id": "tip-12",
+      "content": "Le CSS-in-JS peut ajouter 30-50KB à votre bundle. Le CSS natif reste la solution la plus sobre.",
+      "source": "Bundlephobia"
+    }
+  ]
+}

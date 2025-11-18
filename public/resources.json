@@ -1,0 +1,136 @@
+{
+  "resources": [
+    {
+      "id": "guide-ecoconception",
+      "title": "Guide de l'éco-conception web",
+      "description": "Guide complet pour concevoir des sites web sobres et performants. Couvre l'optimisation des images, le CSS minimaliste, et l'architecture légère.",
+      "category": "Guides",
+      "tags": ["web", "design", "performance", "frontend"],
+      "type": "link",
+      "url": "https://collectif.greenit.fr/ecoconception-web/",
+      "readingTime": "45 min",
+      "impact": "high"
+    },
+    {
+      "id": "ref-rgaa",
+      "title": "Référentiel général d'amélioration de l'accessibilité (RGAA)",
+      "description": "Le référentiel officiel français pour rendre les contenus numériques accessibles à tous. Critères techniques et méthodes de test.",
+      "category": "Guides",
+      "tags": ["accessibilité", "web", "frontend"],
+      "type": "link",
+      "url": "https://accessibilite.numerique.gouv.fr/",
+      "readingTime": "60 min",
+      "impact": "high"
+    },
+    {
+      "id": "outil-lighthouse",
+      "title": "Lighthouse - Audit automatisé",
+      "description": "Outil d'audit open-source de Google pour mesurer les performances, l'accessibilité, et les bonnes pratiques de votre site web.",
+      "category": "Outils",
+      "tags": ["performance", "audit", "frontend", "accessibilité"],
+      "type": "link",
+      "url": "https://developer.chrome.com/docs/lighthouse/",
+      "readingTime": "15 min",
+      "impact": "high"
+    },
+    {
+      "id": "outil-websitecarbon",
+      "title": "Website Carbon Calculator",
+      "description": "Calculez l'empreinte carbone de votre site web et obtenez des recommandations pour la réduire.",
+      "category": "Outils",
+      "tags": ["performance", "audit", "impact"],
+      "type": "link",
+      "url": "https://www.websitecarbon.com/",
+      "readingTime": "5 min",
+      "impact": "medium"
+    },
+    {
+      "id": "cas-lowtechmagazine",
+      "title": "Low-tech Magazine - Site solaire",
+      "description": "Étude de cas : un blog alimenté par énergie solaire avec design ultra-sobre. Exemple concret d'éco-conception radicale.",
+      "category": "Cas d'études",
+      "tags": ["web", "design", "performance", "impact"],
+      "type": "link",
+      "url": "https://solar.lowtechmagazine.com/about.html",
+      "readingTime": "20 min",
+      "impact": "high"
+    },
+    {
+      "id": "guide-images-optimisation",
+      "title": "Optimisation des images web",
+      "description": "Techniques avancées pour réduire la taille des images : formats WebP/AVIF, lazy loading, compression adaptative, et responsive images.",
+      "category": "Guides",
+      "tags": ["performance", "frontend", "images"],
+      "type": "link",
+      "url": "https://web.dev/fast/#optimize-your-images",
+      "readingTime": "30 min",
+      "impact": "high"
+    },
+    {
+      "id": "outil-bundlephobia",
+      "title": "Bundlephobia - Analyse de dépendances",
+      "description": "Analysez l'impact de vos dépendances npm sur la taille de votre bundle. Trouvez des alternatives plus légères.",
+      "category": "Outils",
+      "tags": ["performance", "frontend", "backend"],
+      "type": "link",
+      "url": "https://bundlephobia.com/",
+      "readingTime": "10 min",
+      "impact": "medium"
+    },
+    {
+      "id": "guide-clean-code",
+      "title": "Clean Code - Principes fondamentaux",
+      "description": "Les principes essentiels du code propre : lisibilité, maintenabilité, et simplicité. Un code sobre est un code durable.",
+      "category": "Guides",
+      "tags": ["craftmanship", "backend", "frontend"],
+      "type": "link",
+      "url": "https://clean-code-developer.com/",
+      "readingTime": "40 min",
+      "impact": "high"
+    },
+    {
+      "id": "cas-gov-uk",
+      "title": "GOV.UK Design System",
+      "description": "Cas d'étude du design system du gouvernement britannique : accessible, performant, et sobre. Modèle de référence.",
+      "category": "Cas d'études",
+      "tags": ["design", "accessibilité", "frontend"],
+      "type": "link",
+      "url": "https://design-system.service.gov.uk/",
+      "readingTime": "35 min",
+      "impact": "high"
+    },
+    {
+      "id": "outil-wcag-contrast",
+      "title": "WebAIM Contrast Checker",
+      "description": "Vérifiez que vos combinaisons de couleurs respectent les ratios de contraste WCAG AA et AAA pour l'accessibilité.",
+      "category": "Outils",
+      "tags": ["accessibilité", "design"],
+      "type": "link",
+      "url": "https://webaim.org/resources/contrastchecker/",
+      "readingTime": "5 min",
+      "impact": "high"
+    },
+    {
+      "id": "guide-mobile-first",
+      "title": "Mobile First - Approche responsive",
+      "description": "Conception mobile-first pour des sites plus rapides et accessibles. Stratégies de développement progressif.",
+      "category": "Guides",
+      "tags": ["design", "frontend", "performance"],
+      "type": "link",
+      "url": "https://web.dev/mobile-first/",
+      "readingTime": "25 min",
+      "impact": "medium"
+    },
+    {
+      "id": "outil-axe-devtools",
+      "title": "axe DevTools - Tests d'accessibilité",
+      "description": "Extension navigateur pour tester automatiquement l'accessibilité de vos pages. Détecte les problèmes WCAG en temps réel.",
+      "category": "Outils",
+      "tags": ["accessibilité", "audit", "frontend"],
+      "type": "link",
+      "url": "https://www.deque.com/axe/devtools/",
+      "readingTime": "10 min",
+      "impact": "high"
+    }
+  ]
+}
