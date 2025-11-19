@@ -21,6 +21,13 @@ const Header = () => {
             Accueil
           </NavLink>
           <NavLink
+            to="/assessment"
+            className="text-sm font-medium text-muted-foreground hover:text-foreground"
+            activeClassName="text-foreground"
+          >
+            Auto-évaluation
+          </NavLink>
+          <NavLink
             to="/about"
             className="text-sm font-medium text-muted-foreground hover:text-foreground"
             activeClassName="text-foreground"
