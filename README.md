@@ -1,73 +1,94 @@
-# Welcome to your Lovable project
+# Hub de Sobriété Numérique
 
-## Project info
+Une plateforme centrale pour découvrir, évaluer et mettre en œuvre les meilleures pratiques de conception d'applications web sobres, accessibles et durables.
 
-**URL**: https://lovable.dev/projects/c7e52e65-0b41-40c5-bdfd-e2a6d7dfb95d
+## Objectif
 
-## How can I edit this code?
+Ce hub rassemble des ressources, guides et outils pour aider les développeurs et équipes à adopter les principes de l'écoconception numérique. Basé sur le référentiel général d'écoconception des services numériques (RGESN 2024), il offre une approche pratique pour créer des applications web plus légères et responsables.
 
-There are several ways of editing your application.
+## Fonctionnalités
 
-**Use Lovable**
+- **Catalogue de ressources** : Découvrez des outils, guides et bonnes pratiques classés par catégories
+- **Évaluation RGESN** : Évaluez vos projets selon les 91 critères du référentiel 2024
+- **Filtres intelligents** : Trouvez rapidement les ressources pertinentes par tags et catégories
+- **Conseils pratiques** : Apprenez des astuces pour améliorer votre impact environnemental
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/c7e52e65-0b41-40c5-bdfd-e2a6d7dfb95d) and start prompting.
+## Technologies
 
-Changes made via Lovable will be committed automatically to this repo.
+- **Frontend** : React 18 + TypeScript
+- **Styling** : Tailwind CSS + shadcn/ui
+- **Routing** : React Router DOM
+- **Build** : Vite
+- **Data** : XLSX pour l'import des référentiels
 
-**Use your preferred IDE**
+## Installation
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+```bash
+# Cloner le projet
+git clone <repository-url>
+cd digital-sobriety-hub
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+# Installer les dépendances
+npm install
 
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
+# Démarrer le serveur de développement
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+## Import des Référentiels
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+Le projet inclut des scripts pour importer les référentiels officiels :
 
-**Use GitHub Codespaces**
+### Import RGESN depuis Excel
+```bash
+# Installer la dépendance
+npm install xlsx
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+# Exécuter l'import
+node scripts/import-rgesn-excel.js rgesn_2024_outil_declaration_ecoconception.xlsx public/referentials/rgesn.json
+```
 
-## What technologies are used for this project?
+Pour plus de détails, consultez [scripts/README.md](scripts/README.md).
 
-This project is built with:
+## Structure du Projet
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+```
+src/
+├── components/        # Composants UI réutilisables
+├── core/             # Logique métier et domain models
+├── hooks/            # Hooks React personnalisés
+├── pages/            # Pages de l'application
+└── types/            # Définitions TypeScript
 
-## How can I deploy this project?
+public/
+└── referentials/     # Données des référentiels (RGESN, etc.)
 
-Simply open [Lovable](https://lovable.dev/projects/c7e52e65-0b41-40c5-bdfd-e2a6d7dfb95d) and click on Share -> Publish.
+scripts/              # Scripts d'import et traitement
+```
 
-## Can I connect a custom domain to my Lovable project?
+## Catégories de Ressources
 
-Yes, you can!
+- **Strategy** : Stratégie et gouvernance de l'écoconception
+- **Design** : UX/UI éco-responsable
+- **Frontend** : Optimisation des performances web
+- **Backend** : Architecture et infrastructure durable
+- **Data** : Gestion efficace des données
+- **Accessibility** : Conception inclusive et accessible
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+## Contribuer
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+Les contributions sont bienvenues ! Vous pouvez :
+
+- Ajouter de nouvelles ressources et outils
+- Améliorer les descriptions existantes
+- Signaler des erreurs ou suggestions
+- Contribuer aux traductions
+
+## Références
+
+- [Référentiel Général d'Écoconception des Services Numériques 2024](https://ecoresponsable.numerique.gouv.fr/)
+- [RGESN PDF officiel](https://ecoresponsable.numerique.gouv.fr/docs/2024/rgesn-mai2024/referentiel_general_ecoconception_des_services_numeriques_version_2024.pdf)
+
+## Licence
+
+Ce projet est sous licence MIT.

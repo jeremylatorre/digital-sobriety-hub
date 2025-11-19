@@ -26,9 +26,11 @@ Les 7 thèmes du RGESN :
 - `specifications` : Spécifications
 - `architecture` : Architecture
 - `ux-ui` : UX/UI
+- `contenus` : UX/UI
 - `frontend` : Frontend
 - `backend` : Backend
 - `hosting` : Hébergement
+- `algorythm` : Algorithmie
 
 ### Structure d'un critère
 

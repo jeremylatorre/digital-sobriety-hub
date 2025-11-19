@@ -11,9 +11,9 @@
  * node scripts/import-rgesn-excel.js rgesn_2024_outil_declaration_ecoconception.xlsx public/referentials/rgesn.json
  */
 
-const XLSX = require('xlsx');
-const fs = require('fs');
-const path = require('path');
+import XLSX from 'xlsx';
+import fs from 'fs';
+import path from 'path';
 
 // Mapping des thèmes
 const themeMapping = {
@@ -169,7 +169,7 @@ function parseRGESNExcel(excelPath, outputPath) {
 }
 
 // Exécution
-if (require.main === module) {
+if (import.meta.url === `file://${process.argv[1]}`) {
   const args = process.argv.slice(2);
   
   if (args.length < 1) {
@@ -188,4 +188,4 @@ if (require.main === module) {
   parseRGESNExcel(excelPath, outputPath);
 }
 
-module.exports = { parseRGESNExcel };
+export { parseRGESNExcel };
