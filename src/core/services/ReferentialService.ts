@@ -1,30 +1,22 @@
 import { Referential } from '../domain/Referential';
+import { RGESN_REFERENTIAL } from '@/data/rgesn';
 
 export class ReferentialService {
-  private static readonly BASE_PATH = '/referentials';
+  static async listReferentials(): Promise<{ id: string; name: string; version: string }[]> {
+    // In the future, we can add more referentials to this list
+    const referentials = [RGESN_REFERENTIAL];
 
-  static async loadReferential(referentialId: string): Promise<Referential> {
-    try {
-      const response = await fetch(`${this.BASE_PATH}/${referentialId}.json`);
-      if (!response.ok) {
-        throw new Error(`Failed to load referential: ${referentialId}`);
-      }
-      return await response.json();
-    } catch (error) {
-      console.error('Error loading referential:', error);
-      throw error;
-    }
+    return referentials.map(ref => ({
+      id: ref.id,
+      name: ref.name,
+      version: ref.version
+    }));
   }
 
-  static async listReferentials(): Promise<{ id: string; name: string; version: string }[]> {
-    // For now, hardcoded list. Can be replaced with API call
-    return [
-      {
-        id: 'rgesn',
-        name: 'RGESN - Référentiel Général d\'Écoconception de Services Numériques',
-        version: '2.0 (Mai 2024)',
-      },
-      // Add more referentials here in the future
-    ];
+  static async getReferential(id: string): Promise<Referential | null> {
+    if (id === 'rgesn') {
+      return RGESN_REFERENTIAL;
+    }
+    return null;
   }
 }

@@ -1,6 +1,6 @@
 export type CriterionLevel = 'essential' | 'recommended' | 'advanced';
 export type CriterionStatus = 'compliant' | 'non-compliant' | 'not-applicable' | 'pending';
-export type CriterionTheme = 'strategy' | 'specifications' | 'architecture' | 'ux-ui' | 'frontend' | 'backend' | 'hosting';
+export type CriterionTheme = 'strategy' | 'specifications' | 'architecture' | 'ux-ui' | 'contents' | 'frontend' | 'backend' | 'hosting' | 'algorithm';
 
 export interface Criterion {
   id: string;

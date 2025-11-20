@@ -1,4 +1,3 @@
-import { Leaf } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 
 const Header = () => {
@@ -6,7 +5,7 @@ const Header = () => {
     <header className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 items-center justify-between px-4">
         <NavLink to="/" className="flex items-center gap-2 hover:opacity-80">
-          <Leaf className="h-6 w-6 text-primary" aria-hidden="true" />
+          <img src="/AlterNumIA_Darkmode.webp" alt="AlterNumIA Logo" className="h-8 w-auto" />
           <span className="text-xl font-semibold">
             Hub Sobriété Numérique
           </span>
@@ -22,10 +21,18 @@ const Header = () => {
           </NavLink>
           <NavLink
             to="/assessment"
-            className="text-sm font-medium text-muted-foreground hover:text-foreground"
+            className="text-sm font-medium text-muted-foreground hover:text-foreground flex items-center gap-1.5"
             activeClassName="text-foreground"
           >
             Auto-évaluation
+            <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded bg-primary/20 text-primary">ALPHA</span>
+          </NavLink>
+          <NavLink
+            to="/tools"
+            className="text-sm font-medium text-muted-foreground hover:text-foreground"
+            activeClassName="text-foreground"
+          >
+            Outils
           </NavLink>
           <NavLink
             to="/about"

@@ -27,10 +27,13 @@ export function useAssessment(assessmentId?: string) {
         throw new Error('Assessment not found');
       }
       setAssessment(loadedAssessment);
-      
-      const loadedReferential = await ReferentialService.loadReferential(loadedAssessment.referentialId);
+
+      const loadedReferential = await ReferentialService.getReferential(loadedAssessment.referentialId);
+      if (!loadedReferential) {
+        throw new Error('Referential not found');
+      }
       setReferential(loadedReferential);
-      
+
       const calculatedScore = AssessmentService.calculateScore(loadedAssessment, loadedReferential);
       setScore(calculatedScore);
     } catch (err) {
@@ -44,7 +47,10 @@ export function useAssessment(assessmentId?: string) {
     setLoading(true);
     setError(null);
     try {
-      const loadedReferential = await ReferentialService.loadReferential(referentialId);
+      const loadedReferential = await ReferentialService.getReferential(referentialId);
+      if (!loadedReferential) {
+        throw new Error('Referential not found');
+      }
       setReferential(loadedReferential);
 
       const newAssessment: Assessment = {
@@ -63,7 +69,7 @@ export function useAssessment(assessmentId?: string) {
 
       AssessmentService.saveAssessment(newAssessment);
       setAssessment(newAssessment);
-      
+
       const calculatedScore = AssessmentService.calculateScore(newAssessment, loadedReferential);
       setScore(calculatedScore);
     } catch (err) {
@@ -88,7 +94,28 @@ export function useAssessment(assessmentId?: string) {
 
     AssessmentService.saveAssessment(updatedAssessment);
     setAssessment(updatedAssessment);
-    
+
+    const calculatedScore = AssessmentService.calculateScore(updatedAssessment, referential);
+    setScore(calculatedScore);
+  };
+
+  const updateResponses = (newResponses: CriterionResponse[]) => {
+    if (!assessment || !referential) return;
+
+    const updatedResponses = assessment.responses.map((r) => {
+      const newResponse = newResponses.find((nr) => nr.criterionId === r.criterionId);
+      return newResponse || r;
+    });
+
+    const updatedAssessment: Assessment = {
+      ...assessment,
+      responses: updatedResponses,
+      updatedAt: new Date().toISOString(),
+    };
+
+    AssessmentService.saveAssessment(updatedAssessment);
+    setAssessment(updatedAssessment);
+
     const calculatedScore = AssessmentService.calculateScore(updatedAssessment, referential);
     setScore(calculatedScore);
   };
@@ -123,6 +150,7 @@ export function useAssessment(assessmentId?: string) {
     error,
     createAssessment,
     updateResponse,
+    updateResponses,
     completeAssessment,
     deleteAssessment,
     getImprovements,
