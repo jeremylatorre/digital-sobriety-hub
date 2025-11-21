@@ -18,3 +18,46 @@ services:
     environment:
       - VITE_SUPABASE_URL=${VITE_SUPABASE_URL}
       - VITE_SUPABASE_ANON_KEY=${VITE_SUPABASE_ANON_KEY}
+      - VITE_MATOMO_URL=${VITE_MATOMO_URL:-http://localhost:8080}
+      - VITE_MATOMO_SITE_ID=${VITE_MATOMO_SITE_ID:-1}
+      - VITE_MATOMO_TRACKING_ENABLED=${VITE_MATOMO_TRACKING_ENABLED:-true}
+
+  matomo-db:
+    image: mariadb:10
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MATOMO_DB_ROOT_PASSWORD:-matomo_root_pwd}
+      MYSQL_DATABASE: matomo
+      MYSQL_USER: matomo
+      MYSQL_PASSWORD: ${MATOMO_DB_PASSWORD:-matomo_db_pwd}
+    volumes:
+      - matomo-db:/var/lib/mysql
+    networks:
+      - matomo-network
+    restart: unless-stopped
+
+  matomo:
+    image: matomo:latest
+    ports:
+      - "8080:80"
+    environment:
+      MATOMO_DATABASE_HOST: matomo-db
+      MATOMO_DATABASE_ADAPTER: mysql
+      MATOMO_DATABASE_TABLES_PREFIX: matomo_
+      MATOMO_DATABASE_USERNAME: matomo
+      MATOMO_DATABASE_PASSWORD: ${MATOMO_DB_PASSWORD:-matomo_db_pwd}
+      MATOMO_DATABASE_DBNAME: matomo
+    volumes:
+      - matomo-data:/var/www/html
+    depends_on:
+      - matomo-db
+    networks:
+      - matomo-network
+    restart: unless-stopped
+
+volumes:
+  matomo-db:
+  matomo-data:
+
+
+networks:
+  matomo-network:
