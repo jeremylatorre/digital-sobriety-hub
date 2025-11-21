@@ -13,6 +13,7 @@ export interface Criterion {
   implementation: string;
   verification: string;
   resources?: string[];
+  priority?: boolean; // For Quick Assessment mode
 }
 
 export interface CriterionResponse {

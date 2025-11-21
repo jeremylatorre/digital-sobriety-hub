@@ -1,45 +1,52 @@
-import { useState, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useRef, useEffect } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import { ReferentialSelector } from '@/components/ReferentialSelector';
 import { AssessmentForm } from '@/components/AssessmentForm';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 import { useAssessment } from '@/hooks/useAssessment';
 import { toast } from 'sonner';
-import { Upload } from 'lucide-react';
+import { Upload, HelpCircle } from 'lucide-react';
 import * as XLSX from 'xlsx';
 import { CriterionResponse, CriterionStatus } from '@/core/domain/Criterion';
 
 export default function Assessment() {
   const navigate = useNavigate();
-  const [step, setStep] = useState<'select' | 'project' | 'evaluate'>('select');
-  const [selectedReferentialId, setSelectedReferentialId] = useState<string>('');
-  const [projectName, setProjectName] = useState('');
-  const [projectDescription, setProjectDescription] = useState('');
+  const [searchParams] = useSearchParams();
+  const assessmentId = searchParams.get('id');
+
+  const [project, setProject] = useState({ name: '', description: '' });
+  const [showNewProject, setShowNewProject] = useState(false);
+  const [selectedLevel, setSelectedLevel] = useState<'essential' | 'recommended' | 'advanced'>('advanced');
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const { assessment, referential, createAssessment, updateResponse, updateResponses, completeAssessment } = useAssessment();
+  const {
+    assessment,
+    referential,
+    loading,
+    createAssessment,
+    updateResponse,
+    updateResponses,
+    completeAssessment,
+    resumeAssessment,
+    saveProgress,
+    deleteAssessment
+  } = useAssessment(assessmentId || undefined);
 
-  const handleReferentialSelect = (referentialId: string) => {
-    setSelectedReferentialId(referentialId);
-    setStep('project');
-  };
-
-  const handleProjectSubmit = async () => {
-    if (!projectName.trim()) {
-      toast.error('Veuillez saisir un nom de projet');
-      return;
+  // Show new project form when:
+  // - No assessment is loaded yet
+  // - Not loading an assessment
+  // - No assessmentId in URL
+  useEffect(() => {
+    if (!assessment && !loading && !assessmentId) {
+      setShowNewProject(true);
     }
-
-    await createAssessment(selectedReferentialId, projectName, projectDescription);
-    setStep('evaluate');
-    toast.success('Évaluation créée avec succès');
-  };
+  }, [assessment, loading, assessmentId]);
 
   const handleImportClick = () => {
     fileInputRef.current?.click();
@@ -64,16 +71,27 @@ export default function Assessment() {
         })).filter(r => r.criterionId && r.status);
 
         // Create assessment with imported responses
-        await createAssessment(selectedReferentialId, projectName || 'Évaluation importée', projectDescription);
+        // Defaulting to rgesn-2024 for now
+        const newAssessment = await createAssessment('rgesn-2024', project.name || 'Évaluation importée', project.description);
 
-        // Wait for assessment to be created, then update responses
-        setTimeout(() => {
-          if (updateResponses) {
-            updateResponses(importedResponses);
-            setStep('evaluate');
-            toast.success(`Import réussi ! ${importedResponses.length} réponses importées.`);
-          }
-        }, 100);
+        if (newAssessment) {
+          // Wait for state update if needed, but we have the object now.
+          // However, updateResponses relies on 'assessment' state in hook.
+          // Since we just called setAssessment in hook, it should be updated on next render.
+          // But here we are in the same closure.
+
+          // Better approach: pass responses to createAssessment? 
+          // For now, let's use the timeout but check success.
+          setTimeout(() => {
+            if (updateResponses) {
+              updateResponses(importedResponses);
+              setShowNewProject(false);
+              toast.success(`Import réussi ! ${importedResponses.length} réponses importées.`);
+            }
+          }, 100);
+        } else {
+          toast.error("Erreur lors de la création de l'évaluation pour l'import.");
+        }
       } catch (error) {
         console.error("Erreur lors de l'import:", error);
         toast.error("Erreur lors de la lecture du fichier.");
@@ -84,90 +102,247 @@ export default function Assessment() {
     reader.readAsArrayBuffer(file);
   };
 
+  const handleProjectSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!project.name.trim()) {
+      toast.error('Veuillez saisir un nom de projet');
+      return;
+    }
+
+    const newAssessment = await createAssessment('rgesn-2024', project.name, project.description, selectedLevel);
+
+    if (newAssessment) {
+      setShowNewProject(false);
+      toast.success('Évaluation créée avec succès');
+    } else {
+      toast.error("Erreur lors de la création de l'évaluation. Veuillez réessayer.");
+    }
+  };
+
   const handleComplete = () => {
     completeAssessment();
     toast.success('Évaluation terminée avec succès');
     navigate(`/assessment-results/${assessment?.id}`);
   };
 
+  const handleReset = () => {
+    if (confirm("Êtes-vous sûr de vouloir recommencer ? Toutes vos réponses seront effacées.")) {
+      if (assessment) {
+        deleteAssessment(assessment.id);
+      }
+      setProject({ name: '', description: '' });
+      setShowNewProject(true);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex flex-col bg-background">
+        <Header />
+        <main className="flex-1 container mx-auto px-4 py-8">
+          <div className="max-w-4xl mx-auto space-y-6">
+            {/* Skeleton header */}
+            <div className="animate-pulse space-y-4">
+              <div className="h-10 bg-muted rounded-lg w-2/3 mx-auto"></div>
+              <div className="h-6 bg-muted rounded w-1/2 mx-auto"></div>
+            </div>
+            {/* Skeleton content */}
+            <div className="mt-12 animate-pulse space-y-4">
+              <div className="h-64 bg-muted rounded-xl"></div>
+              <div className="h-12 bg-muted rounded-lg w-1/4"></div>
+            </div>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+
+  if (showNewProject || !assessment || !referential) {
+    return (
+      <div className="min-h-screen flex flex-col bg-background">
+        <Header />
+        <main className="flex-1 container mx-auto px-4 py-8 md:py-12">
+          <div className="max-w-3xl mx-auto space-y-8">
+            {/* Hero section */}
+            <div className="text-center space-y-4 mb-12">
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-medium mb-4">
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
+                </span>
+                Nouvelle évaluation
+              </div>
+              <h1 className="text-4xl md:text-5xl font-bold tracking-tight">
+                Évaluez votre projet
+              </h1>
+              <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+                Démarrez une évaluation d'écoconception basée sur le référentiel RGESN et obtenez des recommandations personnalisées.
+              </p>
+            </div>
+
+            <Card className="border-2 shadow-lg">
+              <CardHeader className="space-y-3 pb-6">
+                <CardTitle className="text-2xl">Informations du projet</CardTitle>
+                <CardDescription className="text-base">
+                  Ces informations identifieront votre évaluation et apparaîtront dans le rapport final.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <form onSubmit={handleProjectSubmit} className="space-y-6">
+                  <div className="space-y-3">
+                    <Label htmlFor="name" className="text-base font-medium">
+                      Nom du projet <span className="text-destructive">*</span>
+                    </Label>
+                    <Input
+                      id="name"
+                      required
+                      value={project.name}
+                      onChange={(e) => setProject({ ...project, name: e.target.value })}
+                      placeholder="Ex: Mon Site Web"
+                      className="h-12 text-base"
+                    />
+                  </div>
+                  <div className="space-y-3">
+                    <Label htmlFor="description" className="text-base font-medium">
+                      Description <span className="text-muted-foreground font-normal">(optionnel)</span>
+                    </Label>
+                    <Textarea
+                      id="description"
+                      value={project.description}
+                      onChange={(e) => setProject({ ...project, description: e.target.value })}
+                      placeholder="Décrivez brièvement le contexte de votre projet..."
+                      className="min-h-[120px] text-base resize-none"
+                    />
+                  </div>
+
+                  <div className="space-y-3">
+                    <Label className="text-base font-medium">
+                      Niveau d'évaluation <span className="text-destructive">*</span>
+                    </Label>
+                    <p className="text-sm text-muted-foreground">
+                      Choisissez le niveau de profondeur (non modifiable après création)
+                    </p>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                      <button
+                        type="button"
+                        onClick={() => setSelectedLevel('essential')}
+                        className={`p-4 rounded-lg border-2 transition-all text-left ${selectedLevel === 'essential'
+                          ? 'border-primary bg-primary/5'
+                          : 'border-border hover:border-primary/50'
+                          }`}
+                      >
+                        <div className="font-semibold text-base mb-1">Light</div>
+                        <div className="text-sm text-muted-foreground">Critères essentiels uniquement</div>
+                        <div className="text-xs text-muted-foreground mt-2">~ 15-20 questions</div>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setSelectedLevel('recommended')}
+                        className={`p-4 rounded-lg border-2 transition-all text-left ${selectedLevel === 'recommended'
+                          ? 'border-primary bg-primary/5'
+                          : 'border-border hover:border-primary/50'
+                          }`}
+                      >
+                        <div className="font-semibold text-base mb-1">Standard</div>
+                        <div className="text-sm text-muted-foreground">Essentiels + recommandés</div>
+                        <div className="text-xs text-muted-foreground mt-2">~ 40-50 questions</div>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setSelectedLevel('advanced')}
+                        className={`p-4 rounded-lg border-2 transition-all text-left ${selectedLevel === 'advanced'
+                          ? 'border-primary bg-primary/5'
+                          : 'border-border hover:border-primary/50'
+                          }`}
+                      >
+                        <div className="font-semibold text-base mb-1">Full</div>
+                        <div className="text-sm text-muted-foreground">Tous les critères</div>
+                        <div className="text-xs text-muted-foreground mt-2">~ 78 questions</div>
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="flex flex-col sm:flex-row gap-3 pt-6">
+                    <Button type="submit" size="lg" className="flex-1 h-12 text-base font-medium">
+                      Commencer l'évaluation
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="lg"
+                      onClick={handleImportClick}
+                      className="h-12"
+                    >
+                      <Upload className="mr-2 h-5 w-5" />
+                      Importer Excel
+                    </Button>
+                  </div>
+                  <input
+                    type="file"
+                    ref={fileInputRef}
+                    className="hidden"
+                    accept=".xlsx, .xls"
+                    onChange={handleImportFile}
+                    aria-label="Importer un fichier Excel"
+                  />
+                </form>
+              </CardContent>
+            </Card>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <Header />
-      <main className="flex-1 container mx-auto px-4 py-8">
-        <div className="mb-8 text-center space-y-2">
-          <div className="flex items-center justify-center gap-3">
-            <h1 className="text-4xl font-bold text-foreground">Auto-évaluation</h1>
-            <span className="text-sm font-semibold px-2.5 py-1 rounded bg-primary/20 text-primary">ALPHA</span>
+
+      <main className="flex-1 container mx-auto px-4 py-6 md:py-8">
+        {/* Project header */}
+        <div className="mb-6 md:mb-8">
+          <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-3 mb-2">
+                <h1 className="text-2xl md:text-3xl font-bold truncate">
+                  {assessment.projectName}
+                </h1>
+                <Badge variant="secondary" className="text-xs font-mono shrink-0">
+                  ALPHA
+                </Badge>
+              </div>
+              {assessment.projectDescription && (
+                <p className="text-muted-foreground text-sm md:text-base line-clamp-2">
+                  {assessment.projectDescription}
+                </p>
+              )}
+            </div>
+            <div className="flex items-center gap-2 shrink-0">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={handleReset}
+                className="text-destructive hover:text-destructive hover:bg-destructive/10"
+              >
+                Recommencer
+              </Button>
+            </div>
           </div>
-          <p className="text-muted-foreground max-w-2xl mx-auto">
-            Évaluez votre projet numérique selon les bonnes pratiques d'écoconception
-          </p>
         </div>
 
-        {step === 'select' && (
-          <ReferentialSelector onSelect={handleReferentialSelect} />
-        )}
-
-        {step === 'project' && (
-          <Card className="max-w-2xl mx-auto">
-            <CardHeader>
-              <CardTitle>Informations du projet</CardTitle>
-              <CardDescription>
-                Renseignez les informations de base sur votre projet ou importez une évaluation existante
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="projectName">Nom du projet *</Label>
-                <Input
-                  id="projectName"
-                  placeholder="Mon super projet"
-                  value={projectName}
-                  onChange={(e) => setProjectName(e.target.value)}
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="projectDescription">Description (optionnelle)</Label>
-                <Textarea
-                  id="projectDescription"
-                  placeholder="Une brève description de votre projet..."
-                  rows={4}
-                  value={projectDescription}
-                  onChange={(e) => setProjectDescription(e.target.value)}
-                />
-              </div>
-              <div className="flex gap-3 pt-4">
-                <Button variant="outline" onClick={() => setStep('select')} className="flex-1">
-                  Retour
-                </Button>
-                <Button variant="outline" onClick={handleImportClick} className="flex-1">
-                  <Upload className="mr-2 h-4 w-4" />
-                  Importer
-                </Button>
-                <input
-                  type="file"
-                  ref={fileInputRef}
-                  className="hidden"
-                  accept=".xlsx, .xls"
-                  onChange={handleImportFile}
-                />
-                <Button onClick={handleProjectSubmit} className="flex-1">
-                  Commencer l'évaluation
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        )}
-
-        {step === 'evaluate' && assessment && referential && (
-          <AssessmentForm
-            referential={referential}
-            responses={assessment.responses}
-            onResponseUpdate={updateResponse}
-            onResponsesUpdate={updateResponses}
-            onComplete={handleComplete}
-          />
-        )}
+        <AssessmentForm
+          referential={referential}
+          responses={assessment.responses}
+          initialTheme={assessment.currentTheme}
+          initialIndex={assessment.currentIndex}
+          onResponseUpdate={updateResponse}
+          onResponsesUpdate={updateResponses}
+          onProgressUpdate={saveProgress}
+          onComplete={handleComplete}
+          level={assessment.level}
+        />
       </main>
       <Footer />
     </div>

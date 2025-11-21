@@ -14,7 +14,8 @@ export class ReferentialService {
   }
 
   static async getReferential(id: string): Promise<Referential | null> {
-    if (id === 'rgesn') {
+    console.log('ReferentialService.getReferential called with ID:', id);
+    if (id === 'rgesn' || id === 'rgesn-2024') {
       return RGESN_REFERENTIAL;
     }
     return null;

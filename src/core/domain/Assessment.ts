@@ -9,6 +9,9 @@ export interface Assessment {
   updatedAt: string;
   responses: CriterionResponse[];
   completed: boolean;
+  currentTheme?: string;
+  currentIndex?: number;
+  level: 'essential' | 'recommended' | 'advanced';
 }
 
 export interface AssessmentScore {
