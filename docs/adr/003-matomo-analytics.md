@@ -1,7 +1,7 @@
 # ADR-003: Self-Hosted Matomo for Analytics
 
 ## Status
-Accepted
+Superseded by [ADR-004](./004-umami-analytics.md)
 
 ## Context
 The Digital Sobriety Hub application needs analytics to understand user behavior, improve UX, and measure the effectiveness of the digital sobriety assessment tool. However, traditional analytics solutions like Google Analytics raise privacy concerns that contradict the project's digital sobriety and ethical responsibility principles.

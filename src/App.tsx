@@ -1,7 +1,7 @@
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { useEffect } from "react";
 import Home from "./pages/Home";
 import Assessment from "./pages/Assessment";
@@ -12,20 +12,12 @@ import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import { ThemeProvider } from "./components/ThemeProvider";
 import { AuthProvider, useAuth } from "./contexts/AuthContext";
-import { MatomoProvider, matomoInstance, trackPageView } from "./lib/matomo";
+import { initAnalytics } from "./lib/analytics";
 
 const queryClient = new QueryClient();
 
-// Track page views on route changes
-const RouteTracker = () => {
-  const location = useLocation();
-
-  useEffect(() => {
-    trackPageView();
-  }, [location]);
-
-  return null;
-};
+// Initialize Analytics
+initAnalytics();
 
 // Protected Route Component
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
@@ -44,34 +36,31 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <MatomoProvider value={matomoInstance}>
-      <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
-        <AuthProvider>
-          <TooltipProvider>
-            <Toaster />
-            <BrowserRouter>
-              <RouteTracker />
-              <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/assessment" element={<Assessment />} />
-                <Route path="/assessment-results/:id" element={<AssessmentResults />} />
-                <Route path="/tools" element={<Tools />} />
-                <Route path="/login" element={<Login />} />
-                <Route path="/register" element={<Register />} />
-                <Route
-                  path="/dashboard"
-                  element={
-                    <ProtectedRoute>
-                      <Dashboard />
-                    </ProtectedRoute>
-                  }
-                />
-              </Routes>
-            </BrowserRouter>
-          </TooltipProvider>
-        </AuthProvider>
-      </ThemeProvider>
-    </MatomoProvider>
+    <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
+      <AuthProvider>
+        <TooltipProvider>
+          <Toaster />
+          <BrowserRouter>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/assessment" element={<Assessment />} />
+              <Route path="/assessment-results/:id" element={<AssessmentResults />} />
+              <Route path="/tools" element={<Tools />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
+              <Route
+                path="/dashboard"
+                element={
+                  <ProtectedRoute>
+                    <Dashboard />
+                  </ProtectedRoute>
+                }
+              />
+            </Routes>
+          </BrowserRouter>
+        </TooltipProvider>
+      </AuthProvider>
+    </ThemeProvider>
   </QueryClientProvider>
 );
 
