@@ -2,6 +2,12 @@
 
 Une plateforme centrale pour découvrir, évaluer et mettre en œuvre les meilleures pratiques de conception d'applications web sobres, accessibles et durables.
 
+> [!IMPORTANT]
+> **Version de Démonstration / Demo Version**
+> 
+> La version en ligne de ce projet est actuellement une démonstration. Elle ne doit pas être utilisée pour des évaluations officielles ou en production. Les données peuvent être réinitialisées à tout moment.
+
+
 ## Objectif
 
 Ce hub rassemble des ressources, guides et outils pour aider les développeurs et équipes à adopter les principes de l'écoconception numérique. Basé sur le référentiel général d'écoconception des services numériques (RGESN 2024), il offre une approche pratique pour créer des applications web plus légères et responsables.

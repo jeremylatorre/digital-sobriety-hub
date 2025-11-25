@@ -7,15 +7,10 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Criterion, CriterionResponse, CriterionStatus, CriterionLevel } from '@/core/domain/Criterion';
 import { Referential } from '@/core/domain/Referential';
-import { ChevronLeft, ChevronRight, Info, CheckCircle2, Trophy, Download, Upload } from 'lucide-react';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '@/components/ui/tooltip';
+import { ChevronLeft, ChevronRight, CheckCircle2, Trophy, Download, Upload, ExternalLink } from 'lucide-react';
 import * as XLSX from 'xlsx';
 import { toast } from 'sonner';
 
@@ -428,26 +423,45 @@ export function AssessmentForm({ referential, responses, initialTheme, initialIn
                     </div>
                     <CardTitle className="text-xl">{selectedCriterion.title}</CardTitle>
                   </div>
-                  <TooltipProvider>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <Button variant="ghost" size="icon">
-                          <Info className="h-5 w-5" />
-                        </Button>
-                      </TooltipTrigger>
-                      <TooltipContent className="max-w-md">
-                        <div className="space-y-2">
-                          <p><strong>Objectif :</strong> {selectedCriterion.objective}</p>
-                          <p><strong>Mise en œuvre :</strong> {selectedCriterion.implementation}</p>
-                          <p><strong>Vérification :</strong> {selectedCriterion.verification}</p>
-                        </div>
-                      </TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
+                  {referential.id.includes('rgesn') && (
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      asChild
+                      title="Voir le détail du critère"
+                    >
+                      <a
+                        href={`https://ecoresponsable.numerique.gouv.fr/publications/referentiel-general-ecoconception/critere/${selectedCriterion.number}/`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <ExternalLink className="h-5 w-5" />
+                      </a>
+                    </Button>
+                  )}
                 </div>
                 <CardDescription>{selectedCriterion.description}</CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
+                <Tabs defaultValue="objective" className="w-full">
+                  <TabsList className="grid w-full grid-cols-3">
+                    <TabsTrigger value="objective">Objectif</TabsTrigger>
+                    <TabsTrigger value="implementation">Mise en œuvre</TabsTrigger>
+                    <TabsTrigger value="verification">Vérification</TabsTrigger>
+                  </TabsList>
+                  <div className="mt-4 p-4 bg-muted/30 rounded-lg border">
+                    <TabsContent value="objective" className="mt-0 space-y-2">
+                      <div className="text-sm text-muted-foreground [&_ul]:list-disc [&_ul]:pl-4 [&_p]:mb-2" dangerouslySetInnerHTML={{ __html: selectedCriterion.objective }} />
+                    </TabsContent>
+                    <TabsContent value="implementation" className="mt-0 space-y-2">
+                      <div className="text-sm text-muted-foreground [&_ul]:list-disc [&_ul]:pl-4 [&_p]:mb-2" dangerouslySetInnerHTML={{ __html: selectedCriterion.implementation }} />
+                    </TabsContent>
+                    <TabsContent value="verification" className="mt-0 space-y-2">
+                      <div className="text-sm text-muted-foreground [&_ul]:list-disc [&_ul]:pl-4 [&_p]:mb-2" dangerouslySetInnerHTML={{ __html: selectedCriterion.verification }} />
+                    </TabsContent>
+                  </div>
+                </Tabs>
+
                 <div className="space-y-3">
                   <Label>Statut de conformité</Label>
                   <RadioGroup
