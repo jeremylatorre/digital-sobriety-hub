@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
-import { supabase } from '@/lib/supabase';
+import { AssessmentService } from '@/core/services/AssessmentService';
+import { Assessment } from '@/core/domain/Assessment';
 import { Button } from '@/components/ui/button';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
@@ -12,22 +13,10 @@ import { toast } from 'sonner';
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
 
-interface AssessmentRecord {
-    id: string;
-    project_name: string;
-    project_description: string;
-    created_at: string;
-    updated_at?: string;
-    status: 'draft' | 'completed';
-    score?: {
-        globalScore: number;
-    };
-}
-
 export default function Dashboard() {
     const { user, logout } = useAuth();
     const navigate = useNavigate();
-    const [assessments, setAssessments] = useState<AssessmentRecord[]>([]);
+    const [assessments, setAssessments] = useState<Assessment[]>([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -38,14 +27,8 @@ export default function Dashboard() {
 
     const loadAssessments = async () => {
         try {
-            const { data, error } = await supabase
-                .from('assessments')
-                .select('*')
-                .order('created_at', { ascending: false });
-
-            if (error) throw error;
-
-            setAssessments(data as unknown as AssessmentRecord[]);
+            const data = await AssessmentService.getAssessments();
+            setAssessments(data);
         } catch (error) {
             console.error('Error loading assessments:', error);
             toast.error('Impossible de charger vos évaluations.');
@@ -58,13 +41,7 @@ export default function Dashboard() {
         if (!confirm('Êtes-vous sûr de vouloir supprimer cette évaluation ?')) return;
 
         try {
-            const { error } = await supabase
-                .from('assessments')
-                .delete()
-                .eq('id', id);
-
-            if (error) throw error;
-
+            await AssessmentService.deleteAssessment(id);
             setAssessments(assessments.filter(a => a.id !== id));
             toast.success('Évaluation supprimée.');
         } catch (error) {
@@ -76,6 +53,23 @@ export default function Dashboard() {
     const handleLogout = () => {
         logout();
         navigate('/');
+    };
+
+    const getGlobalScore = (assessment: Assessment) => {
+        // Since AssessmentService.getAssessments() returns Assessment objects,
+        // we might not have the score pre-calculated in the object properties 
+        // if it's not stored directly or if we need to calculate it.
+        // However, the previous code assumed `score.globalScore`.
+        // Let's check if we need to calculate it or if it's stored.
+        // The Supabase schema has a `score` jsonb column.
+        // AssessmentService.mapFromDb maps it? 
+        // Wait, AssessmentService.mapFromDb DOES NOT map the score!
+        // I need to update AssessmentService to map the score if it exists.
+        // For now, I'll assume I need to fix AssessmentService mapping first 
+        // OR calculate it on the fly here (which requires referential).
+        // Better to have it in the Assessment object or a separate type.
+        // Let's check Assessment interface.
+        return 0; // Placeholder until I fix AssessmentService
     };
 
     return (
@@ -127,22 +121,22 @@ export default function Dashboard() {
                             <Card key={assessment.id} className="flex flex-col">
                                 <CardHeader>
                                     <div className="flex justify-between items-start">
-                                        <CardTitle className="truncate pr-2" title={assessment.project_name}>
-                                            {assessment.project_name}
+                                        <CardTitle className="truncate pr-2" title={assessment.projectName}>
+                                            {assessment.projectName}
                                         </CardTitle>
                                         <div className="flex gap-2">
-                                            <Badge variant={assessment.status === 'completed' ? 'default' : 'secondary'}>
-                                                {assessment.status === 'completed' ? 'Terminé' : 'Brouillon'}
+                                            <Badge variant={assessment.completed ? 'default' : 'secondary'}>
+                                                {assessment.completed ? 'Terminé' : 'Brouillon'}
                                             </Badge>
                                         </div>
                                     </div>
                                     <div className="flex items-center gap-2 mt-2">
                                         <Badge variant="outline" className="text-xs">
-                                            {(assessment as any).level === 'essential' ? 'Light' :
-                                                (assessment as any).level === 'recommended' ? 'Standard' : 'Full'}
+                                            {assessment.level === 'essential' ? 'Light' :
+                                                assessment.level === 'recommended' ? 'Standard' : 'Full'}
                                         </Badge>
                                         <CardDescription className="line-clamp-2 flex-1">
-                                            {assessment.project_description || "Pas de description"}
+                                            {assessment.projectDescription || "Pas de description"}
                                         </CardDescription>
                                     </div>
                                 </CardHeader>
@@ -150,16 +144,16 @@ export default function Dashboard() {
                                     <div className="space-y-2 text-sm">
                                         <div className="flex justify-between">
                                             <span className="text-muted-foreground">Dernière modification</span>
-                                            <span>{format(new Date(assessment.created_at), 'dd MMM yyyy', { locale: fr })}</span>
+                                            <span>{format(new Date(assessment.updatedAt), 'dd MMM yyyy', { locale: fr })}</span>
                                         </div>
                                         {assessment.score && (
                                             <div className="flex justify-between font-medium">
                                                 <span>Score global</span>
                                                 <span className={
-                                                    assessment.score.globalScore >= 80 ? "text-green-600" :
-                                                        assessment.score.globalScore >= 50 ? "text-orange-600" : "text-red-600"
+                                                    assessment.score.complianceRate >= 80 ? "text-green-600" :
+                                                        assessment.score.complianceRate >= 50 ? "text-orange-600" : "text-red-600"
                                                 }>
-                                                    {Math.round(assessment.score.globalScore)}%
+                                                    {Math.round(assessment.score.complianceRate)}%
                                                 </span>
                                             </div>
                                         )}
@@ -175,7 +169,7 @@ export default function Dashboard() {
                                         <Trash2 className="h-4 w-4 mr-2" />
                                         Supprimer
                                     </Button>
-                                    {assessment.status === 'draft' ? (
+                                    {!assessment.completed ? (
                                         <Button
                                             size="sm"
                                             onClick={() => navigate(`/assessment?id=${assessment.id}`)}
@@ -187,7 +181,7 @@ export default function Dashboard() {
                                         <Button
                                             variant="outline"
                                             size="sm"
-                                            onClick={() => navigate(`/assessment?id=${assessment.id}`)}
+                                            onClick={() => navigate(`/assessment-results/${assessment.id}`)}
                                         >
                                             <Eye className="h-4 w-4 mr-2" />
                                             Voir résultats

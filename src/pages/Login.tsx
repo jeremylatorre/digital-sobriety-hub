@@ -29,9 +29,13 @@ export default function Login() {
 
             toast.success('Connexion réussie');
             navigate('/dashboard');
-        } catch (error) {
+        } catch (error: any) {
             console.error(error);
-            toast.error('Erreur de connexion. Vérifiez vos identifiants.');
+            if (error.message.includes('Email not confirmed')) {
+                toast.error('Veuillez confirmer votre email avant de vous connecter.');
+            } else {
+                toast.error('Erreur de connexion. Vérifiez vos identifiants.');
+            }
         } finally {
             setLoading(false);
         }

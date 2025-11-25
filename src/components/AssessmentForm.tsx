@@ -58,6 +58,7 @@ const themeLabels: Record<string, string> = {
 export function AssessmentForm({ referential, responses, initialTheme, initialIndex, onResponseUpdate, onResponsesUpdate, onProgressUpdate, onComplete, level }: AssessmentFormProps) {
   const [selectedCriterionId, setSelectedCriterionId] = useState<string | null>(null);
   const [openAccordionValue, setOpenAccordionValue] = useState<string>('');
+  const [isTransitioning, setIsTransitioning] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Filter criteria based on level
@@ -169,69 +170,89 @@ export function AssessmentForm({ referential, responses, initialTheme, initialIn
   };
 
   const handleNext = () => {
-    if (!selectedCriterion) return;
+    if (!selectedCriterion || isTransitioning) return;
 
-    // Find current position
-    let currentTheme = '';
-    let currentIndex = -1;
-    for (const theme of themes) {
-      const index = criteriaByTheme[theme].findIndex(c => c.id === selectedCriterion.id);
-      if (index !== -1) {
-        currentTheme = theme;
-        currentIndex = index;
-        break;
+    // Start transition
+    setIsTransitioning(true);
+
+    // Wait for fade out
+    setTimeout(() => {
+      // Find current position
+      let currentTheme = '';
+      let currentIndex = -1;
+      for (const theme of themes) {
+        const index = criteriaByTheme[theme].findIndex(c => c.id === selectedCriterion.id);
+        if (index !== -1) {
+          currentTheme = theme;
+          currentIndex = index;
+          break;
+        }
       }
-    }
 
-    // Move to next criterion
-    const themeCriteria = criteriaByTheme[currentTheme];
-    if (currentIndex < themeCriteria.length - 1) {
-      // Next question in same theme
-      setSelectedCriterionId(themeCriteria[currentIndex + 1].id);
-    } else {
-      // Move to next theme
-      const themeIndex = themes.indexOf(currentTheme);
-      if (themeIndex < themes.length - 1) {
-        const nextTheme = themes[themeIndex + 1];
-        setSelectedCriterionId(criteriaByTheme[nextTheme][0].id);
-        setOpenAccordionValue(nextTheme);
+      // Move to next criterion
+      const themeCriteria = criteriaByTheme[currentTheme];
+      if (currentIndex < themeCriteria.length - 1) {
+        // Next question in same theme
+        setSelectedCriterionId(themeCriteria[currentIndex + 1].id);
       } else {
-        // All done
-        onComplete();
+        // Move to next theme
+        const themeIndex = themes.indexOf(currentTheme);
+        if (themeIndex < themes.length - 1) {
+          const nextTheme = themes[themeIndex + 1];
+          setSelectedCriterionId(criteriaByTheme[nextTheme][0].id);
+          setOpenAccordionValue(nextTheme);
+        } else {
+          // All done
+          setIsTransitioning(false);
+          onComplete();
+          return;
+        }
       }
-    }
+
+      // End transition after content changes
+      setTimeout(() => setIsTransitioning(false), 50);
+    }, 200);
   };
 
   const handlePrevious = () => {
-    if (!selectedCriterion) return;
+    if (!selectedCriterion || isTransitioning) return;
 
-    // Find current position
-    let currentTheme = '';
-    let currentIndex = -1;
-    for (const theme of themes) {
-      const index = criteriaByTheme[theme].findIndex(c => c.id === selectedCriterion.id);
-      if (index !== -1) {
-        currentTheme = theme;
-        currentIndex = index;
-        break;
-      }
-    }
+    // Start transition
+    setIsTransitioning(true);
 
-    // Move to previous criterion
-    if (currentIndex > 0) {
-      // Previous question in same theme
-      const themeCriteria = criteriaByTheme[currentTheme];
-      setSelectedCriterionId(themeCriteria[currentIndex - 1].id);
-    } else {
-      // Move to previous theme
-      const themeIndex = themes.indexOf(currentTheme);
-      if (themeIndex > 0) {
-        const prevTheme = themes[themeIndex - 1];
-        const prevThemeCriteria = criteriaByTheme[prevTheme];
-        setSelectedCriterionId(prevThemeCriteria[prevThemeCriteria.length - 1].id);
-        setOpenAccordionValue(prevTheme);
+    // Wait for fade out
+    setTimeout(() => {
+      // Find current position
+      let currentTheme = '';
+      let currentIndex = -1;
+      for (const theme of themes) {
+        const index = criteriaByTheme[theme].findIndex(c => c.id === selectedCriterion.id);
+        if (index !== -1) {
+          currentTheme = theme;
+          currentIndex = index;
+          break;
+        }
       }
-    }
+
+      // Move to previous criterion
+      if (currentIndex > 0) {
+        // Previous question in same theme
+        const themeCriteria = criteriaByTheme[currentTheme];
+        setSelectedCriterionId(themeCriteria[currentIndex - 1].id);
+      } else {
+        // Move to previous theme
+        const themeIndex = themes.indexOf(currentTheme);
+        if (themeIndex > 0) {
+          const prevTheme = themes[themeIndex - 1];
+          const prevThemeCriteria = criteriaByTheme[prevTheme];
+          setSelectedCriterionId(prevThemeCriteria[prevThemeCriteria.length - 1].id);
+          setOpenAccordionValue(prevTheme);
+        }
+      }
+
+      // End transition after content changes
+      setTimeout(() => setIsTransitioning(false), 50);
+    }, 200);
   };
 
   const handleExport = () => {
@@ -390,94 +411,98 @@ export function AssessmentForm({ referential, responses, initialTheme, initialIn
 
         {/* Main: Question Form */}
         {selectedCriterion && (
-          <Card>
-            <CardHeader>
-              <div className="flex items-start justify-between gap-4">
-                <div className="flex-1 space-y-2">
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <Badge variant="outline">{themeLabels[selectedCriterion.theme]}</Badge>
-                    <Badge className={levelColors[selectedCriterion.level]}>
-                      {levelLabels[selectedCriterion.level]}
-                    </Badge>
-                    <span className="text-sm text-muted-foreground">Critère {selectedCriterion.number}</span>
+          <div
+            className="transition-opacity duration-200 ease-in-out"
+            style={{ opacity: isTransitioning ? 0 : 1 }}
+          >
+            <Card>
+              <CardHeader>
+                <div className="flex items-start justify-between gap-4">
+                  <div className="flex-1 space-y-2">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <Badge variant="outline">{themeLabels[selectedCriterion.theme]}</Badge>
+                      <Badge className={levelColors[selectedCriterion.level]}>
+                        {levelLabels[selectedCriterion.level]}
+                      </Badge>
+                      <span className="text-sm text-muted-foreground">Critère {selectedCriterion.number}</span>
+                    </div>
+                    <CardTitle className="text-xl">{selectedCriterion.title}</CardTitle>
                   </div>
-                  <CardTitle className="text-xl">{selectedCriterion.title}</CardTitle>
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button variant="ghost" size="icon">
+                          <Info className="h-5 w-5" />
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent className="max-w-md">
+                        <div className="space-y-2">
+                          <p><strong>Objectif :</strong> {selectedCriterion.objective}</p>
+                          <p><strong>Mise en œuvre :</strong> {selectedCriterion.implementation}</p>
+                          <p><strong>Vérification :</strong> {selectedCriterion.verification}</p>
+                        </div>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
                 </div>
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <Button variant="ghost" size="icon">
-                        <Info className="h-5 w-5" />
-                      </Button>
-                    </TooltipTrigger>
-                    <TooltipContent className="max-w-md">
-                      <div className="space-y-2">
-                        <p><strong>Objectif :</strong> {selectedCriterion.objective}</p>
-                        <p><strong>Mise en œuvre :</strong> {selectedCriterion.implementation}</p>
-                        <p><strong>Vérification :</strong> {selectedCriterion.verification}</p>
-                      </div>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-              </div>
-              <CardDescription>{selectedCriterion.description}</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="space-y-3">
-                <Label>Statut de conformité</Label>
-                <RadioGroup
-                  value={currentResponse?.status}
-                  onValueChange={(value) => handleStatusChange(value as CriterionStatus)}
+                <CardDescription>{selectedCriterion.description}</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div className="space-y-3">
+                  <Label>Statut de conformité</Label>
+                  <RadioGroup
+                    value={currentResponse?.status}
+                    onValueChange={(value) => handleStatusChange(value as CriterionStatus)}
+                  >
+                    <div className="flex items-center space-x-2 transition-transform duration-200 hover:scale-105">
+                      <RadioGroupItem value="compliant" id="compliant" />
+                      <Label htmlFor="compliant" className="cursor-pointer">
+                        Conforme
+                      </Label>
+                    </div>
+                    <div className="flex items-center space-x-2 transition-transform duration-200 hover:scale-105">
+                      <RadioGroupItem value="non-compliant" id="non-compliant" />
+                      <Label htmlFor="non-compliant" className="cursor-pointer">Non conforme</Label>
+                    </div>
+                    <div className="flex items-center space-x-2 transition-transform duration-200 hover:scale-105">
+                      <RadioGroupItem value="not-applicable" id="not-applicable" />
+                      <Label htmlFor="not-applicable" className="cursor-pointer">Non applicable</Label>
+                    </div>
+                  </RadioGroup>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="comment">Commentaire (optionnel)</Label>
+                  <Textarea
+                    id="comment"
+                    placeholder="Ajoutez des précisions sur votre réponse..."
+                    value={currentResponse?.comment || ''}
+                    onChange={(e) => handleCommentChange(e.target.value)}
+                    rows={3}
+                  />
+                </div>
+              </CardContent>
+              <CardFooter className="flex items-center justify-between">
+                <Button
+                  variant="outline"
+                  onClick={handlePrevious}
+                  disabled={isFirstCriterion}
                 >
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="compliant" id="compliant" />
-                    <Label htmlFor="compliant" className="cursor-pointer flex items-center gap-2">
-                      <CheckCircle2 className="h-4 w-4 text-green-500" />
-                      Conforme
-                    </Label>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="non-compliant" id="non-compliant" />
-                    <Label htmlFor="non-compliant" className="cursor-pointer">Non conforme</Label>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="not-applicable" id="not-applicable" />
-                    <Label htmlFor="not-applicable" className="cursor-pointer">Non applicable</Label>
-                  </div>
-                </RadioGroup>
-              </div>
+                  <ChevronLeft className="h-4 w-4 mr-1" />
+                  Précédent
+                </Button>
 
-              <div className="space-y-2">
-                <Label htmlFor="comment">Commentaire (optionnel)</Label>
-                <Textarea
-                  id="comment"
-                  placeholder="Ajoutez des précisions sur votre réponse..."
-                  value={currentResponse?.comment || ''}
-                  onChange={(e) => handleCommentChange(e.target.value)}
-                  rows={3}
-                />
-              </div>
-            </CardContent>
-            <CardFooter className="flex items-center justify-between">
-              <Button
-                variant="outline"
-                onClick={handlePrevious}
-                disabled={isFirstCriterion}
-              >
-                <ChevronLeft className="h-4 w-4 mr-1" />
-                Précédent
-              </Button>
+                <span className="text-sm text-muted-foreground">
+                  {totalResponded} / {filteredCriteria.length} réponses
+                </span>
 
-              <span className="text-sm text-muted-foreground">
-                {totalResponded} / {filteredCriteria.length} réponses
-              </span>
-
-              <Button onClick={handleNext}>
-                {isLastCriterion ? "Terminer" : "Suivant"}
-                <ChevronRight className="h-4 w-4 ml-1" />
-              </Button>
-            </CardFooter>
-          </Card>
+                <Button onClick={handleNext}>
+                  {isLastCriterion ? "Terminer" : "Suivant"}
+                  <ChevronRight className="h-4 w-4 ml-1" />
+                </Button>
+              </CardFooter>
+            </Card>
+          </div>
         )}
       </div>
     </div>

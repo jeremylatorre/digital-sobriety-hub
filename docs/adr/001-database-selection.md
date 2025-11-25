@@ -1,7 +1,7 @@
 # ADR 001: Database Strategy Selection
 
 ## Status
-Proposed
+Accepted
 
 ## Context
 The project initially selected **PocketBase** as a lightweight, all-in-one backend solution (Auth + DB + API) to facilitate rapid development of the Digital Sobriety Hub. 
@@ -13,6 +13,9 @@ However, we have encountered persistent friction with the local Docker developme
 
 The user has requested to challenge this choice and evaluate more stabilized, "ready-to-use" alternatives.
 
+## Decision
+We have decided to switch to **Supabase** (Option 1).
+
 ## Decision Drivers
 1.  **Stability**: The solution must be robust and reliable for local development and eventual production.
 2.  **Ease of Integration**: Must integrate easily with the existing React (Vite) frontend.
@@ -22,7 +25,7 @@ The user has requested to challenge this choice and evaluate more stabilized, "r
 
 ## Options Considered
 
-### 1. Supabase (PostgreSQL + Auth + Auto-API)
+### 1. Supabase (PostgreSQL + Auth + Auto-API) [SELECTED]
 *   **Description**: An open-source Firebase alternative built on top of PostgreSQL.
 *   **Pros**:
     *   **Rock-solid Database**: Uses standard PostgreSQL under the hood.

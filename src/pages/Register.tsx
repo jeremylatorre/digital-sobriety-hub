@@ -15,6 +15,7 @@ export default function Register() {
     const [password, setPassword] = useState('');
     const [passwordConfirm, setPasswordConfirm] = useState('');
     const [loading, setLoading] = useState(false);
+    const [success, setSuccess] = useState(false);
 
     const handleRegister = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -32,8 +33,8 @@ export default function Register() {
 
             if (error) throw error;
 
+            setSuccess(true);
             toast.success('Compte créé avec succès');
-            navigate('/dashboard');
         } catch (error) {
             console.error(error);
             toast.error("Erreur lors de l'inscription. L'email est peut-être déjà utilisé.");
@@ -41,6 +42,40 @@ export default function Register() {
             setLoading(false);
         }
     };
+
+    if (success) {
+        return (
+            <div className="min-h-screen flex flex-col bg-background">
+                <Header />
+                <main className="flex-1 container mx-auto px-4 py-8 flex items-center justify-center">
+                    <Card className="w-full max-w-md text-center">
+                        <CardHeader>
+                            <div className="mx-auto w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mb-4">
+                                <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                                </svg>
+                            </div>
+                            <CardTitle>Compte créé !</CardTitle>
+                            <CardDescription>
+                                Un email de confirmation a été envoyé à <strong>{email}</strong>.
+                            </CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                            <p className="text-sm text-muted-foreground mb-4">
+                                Veuillez cliquer sur le lien dans l'email pour activer votre compte avant de vous connecter.
+                            </p>
+                        </CardContent>
+                        <CardFooter className="flex justify-center">
+                            <Button onClick={() => navigate('/login')} className="w-full">
+                                Retour à la connexion
+                            </Button>
+                        </CardFooter>
+                    </Card>
+                </main>
+                <Footer />
+            </div>
+        );
+    }
 
     return (
         <div className="min-h-screen flex flex-col bg-background">

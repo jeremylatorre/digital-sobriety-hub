@@ -12,6 +12,7 @@ export interface Assessment {
   currentTheme?: string;
   currentIndex?: number;
   level: 'essential' | 'recommended' | 'advanced';
+  score?: AssessmentScore;
 }
 
 export interface AssessmentScore {
