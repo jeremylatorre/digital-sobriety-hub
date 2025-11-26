@@ -77,13 +77,19 @@ export default function AssessmentResults() {
               </Link>
             </Button>
             <div className="flex gap-2">
-              <Button variant="outline" size="sm" onClick={handleShare}>
-                <Share2 className="h-4 w-4 mr-2" />
-                Partager
+              <Button variant="outline" size="sm" asChild>
+                <Link to={`/assessment?id=${assessment.id}`}>
+                  <ArrowLeft className="h-4 w-4 mr-2" />
+                  Ajuster les réponses
+                </Link>
               </Button>
-              <Button variant="outline" size="sm" onClick={handleDownload}>
+              <Button variant="outline" size="sm" onClick={handleShare} disabled>
+                <Share2 className="h-4 w-4 mr-2" />
+                Partager (bientôt)
+              </Button>
+              <Button variant="outline" size="sm" onClick={handleDownload} disabled>
                 <Download className="h-4 w-4 mr-2" />
-                Exporter PDF
+                Exporter PDF (bientôt)
               </Button>
             </div>
           </div>
@@ -102,7 +108,7 @@ export default function AssessmentResults() {
           </div>
 
           <ResultsSummary score={score} referential={referential} />
-          
+
           <ImprovementSuggestions improvements={improvements} />
 
           <Card>

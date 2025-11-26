@@ -28,24 +28,43 @@ export function ResultsSummary({ score, referential }: ResultsSummaryProps) {
     return { label: 'À améliorer', color: 'bg-destructive' };
   };
 
-  const level = getComplianceLevel(score.complianceRate);
+  const level = getComplianceLevel(score.levelScore.complianceRate);
+  const levelLabels = {
+    essential: 'Essentiel',
+    recommended: 'Recommandé',
+    advanced: 'Complet',
+  };
 
   return (
     <div className="space-y-6">
       <Card>
         <CardHeader>
-          <CardTitle className="text-2xl">Score global</CardTitle>
-          <CardDescription>Résultat de votre évaluation</CardDescription>
+          <CardTitle className="text-2xl">Score {levelLabels[score.levelScore.level]}</CardTitle>
+          <CardDescription>Score basé sur les critères {levelLabels[score.levelScore.level].toLowerCase()}s</CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
           <div className="text-center space-y-3">
             <div className="text-6xl font-bold text-primary">
-              {Math.round(score.complianceRate)}%
+              {Math.round(score.levelScore.complianceRate)}%
             </div>
             <Badge className={level.color} variant="default">
               {level.label}
             </Badge>
+            <p className="text-sm text-muted-foreground">
+              {score.levelScore.compliant} sur {score.levelScore.total} critères conformes
+            </p>
           </div>
+
+          {/* Show overall score if different from level score */}
+          {score.levelScore.level !== 'advanced' && (
+            <div className="pt-4 border-t border-border">
+              <p className="text-sm text-muted-foreground text-center">
+                Couverture globale (tous critères) : <span className="font-semibold text-foreground">{Math.round(score.complianceRate)}%</span>
+                <br />
+                <span className="text-xs">({score.compliant} sur {score.totalCriteria - score.notApplicable} critères)</span>
+              </p>
+            </div>
+          )}
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div className="text-center space-y-1 p-4 rounded-lg bg-accent/50">

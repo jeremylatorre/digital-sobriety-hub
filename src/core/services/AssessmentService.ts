@@ -122,7 +122,7 @@ export class AssessmentService {
   }
 
   static calculateScore(assessment: Assessment, referential: Referential): AssessmentScore {
-    const { responses } = assessment;
+    const { responses, level: assessmentLevel } = assessment;
     const { criteria } = referential;
 
     const compliant = responses.filter((r) => r.status === 'compliant').length;
@@ -166,6 +166,23 @@ export class AssessmentService {
       }
     });
 
+    // Calculate level-specific score
+    // Filter criteria based on assessment level
+    const levelCriteria = criteria.filter((c) => {
+      if (assessmentLevel === 'essential') return c.level === 'essential';
+      if (assessmentLevel === 'recommended') return c.level === 'essential' || c.level === 'recommended';
+      return true; // advanced includes all
+    });
+
+    const levelResponses = responses.filter((r) =>
+      levelCriteria.some((c) => c.id === r.criterionId)
+    );
+
+    const levelCompliant = levelResponses.filter((r) => r.status === 'compliant').length;
+    const levelNotApplicable = levelResponses.filter((r) => r.status === 'not-applicable').length;
+    const levelApplicable = levelResponses.length - levelNotApplicable;
+    const levelComplianceRate = levelApplicable > 0 ? (levelCompliant / levelApplicable) * 100 : 0;
+
     return {
       totalCriteria: criteria.length,
       compliant,
@@ -173,6 +190,12 @@ export class AssessmentService {
       notApplicable,
       pending,
       complianceRate,
+      levelScore: {
+        level: assessmentLevel,
+        compliant: levelCompliant,
+        total: levelApplicable,
+        complianceRate: levelComplianceRate,
+      },
       scoreByLevel,
       scoreByTheme,
     };

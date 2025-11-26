@@ -21,7 +21,13 @@ export interface AssessmentScore {
   nonCompliant: number;
   notApplicable: number;
   pending: number;
-  complianceRate: number; // Percentage
+  complianceRate: number; // Overall compliance rate (all criteria)
+  levelScore: {
+    level: 'essential' | 'recommended' | 'advanced';
+    compliant: number;
+    total: number;
+    complianceRate: number; // Compliance for selected level only
+  };
   scoreByLevel: {
     essential: { compliant: number; total: number };
     recommended: { compliant: number; total: number };

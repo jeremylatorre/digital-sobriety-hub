@@ -1,0 +1,230 @@
+/* Print Styles for Clean Printing */
+
+@media print {
+
+    /* Reset and optimize for printing */
+    * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+
+    /* Hide navigation and non-essential UI elements */
+    header,
+    footer,
+    nav,
+    .no-print {
+        display: none !important;
+    }
+
+    /* Optimize page layout */
+    body {
+        background: white !important;
+        color: black !important;
+        font-size: 12pt;
+        line-height: 1.5;
+    }
+
+    /* Ensure content uses full width */
+    .container {
+        max-width: 100% !important;
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+
+    /* Card styles for print */
+    .card,
+    [class*="card"] {
+        border: 1px solid #ddd !important;
+        box-shadow: none !important;
+        page-break-inside: avoid;
+        margin-bottom: 1rem;
+    }
+
+    /* Headings */
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        color: black !important;
+        page-break-after: avoid;
+        font-weight: bold;
+    }
+
+    h1 {
+        font-size: 24pt;
+        margin-bottom: 0.5rem;
+    }
+
+    h2 {
+        font-size: 18pt;
+        margin-top: 1rem;
+        margin-bottom: 0.5rem;
+    }
+
+    h3 {
+        font-size: 14pt;
+    }
+
+    /* Links */
+    a {
+        color: black !important;
+        text-decoration: underline;
+    }
+
+    /* Show URLs for external links */
+    a[href^="http"]:after {
+        content: " (" attr(href) ")";
+        font-size: 0.8em;
+        color: #666;
+    }
+
+    /* Don't show URLs for internal navigation links */
+    a[href^="#"]:after,
+    a[href^="/"]:after {
+        content: "";
+    }
+
+    /* Tables */
+    table {
+        border-collapse: collapse;
+        width: 100%;
+        page-break-inside: avoid;
+    }
+
+    th,
+    td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+    }
+
+    th {
+        background-color: #f5f5f5 !important;
+        font-weight: bold;
+    }
+
+    /* Buttons - show as bordered boxes */
+    button,
+    .button,
+    [role="button"] {
+        border: 1px solid black !important;
+        background: white !important;
+        color: black !important;
+        padding: 4px 8px;
+        display: inline-block;
+    }
+
+    /* Hide interactive elements that don't make sense in print */
+    button[aria-label*="Menu"],
+    button[aria-label*="Toggle"],
+    .theme-toggle,
+    [class*="sheet"],
+    [class*="dialog"]:not([role="alertdialog"]) {
+        display: none !important;
+    }
+
+    /* Progress bars and charts */
+    .progress,
+    [role="progressbar"] {
+        border: 1px solid black;
+        background: white !important;
+    }
+
+    /* Badges */
+    .badge,
+    [class*="badge"] {
+        border: 1px solid black !important;
+        padding: 2px 6px;
+        background: white !important;
+        color: black !important;
+    }
+
+    /* Assessment Results specific styles */
+    .assessment-criterion {
+        page-break-inside: avoid;
+        margin-bottom: 1rem;
+    }
+
+    /* Charts and visual elements */
+    canvas,
+    svg {
+        max-width: 100%;
+        page-break-inside: avoid;
+    }
+
+    /* Page breaks */
+    .page-break-before {
+        page-break-before: always;
+    }
+
+    .page-break-after {
+        page-break-after: always;
+    }
+
+    /* Avoid breaking these elements */
+    img,
+    figure,
+    blockquote,
+    pre {
+        page-break-inside: avoid;
+    }
+
+    /* Images */
+    img {
+        max-width: 100% !important;
+        height: auto !important;
+    }
+
+    /* Code blocks */
+    pre,
+    code {
+        border: 1px solid #ddd;
+        background: #f5f5f5 !important;
+        color: black !important;
+        white-space: pre-wrap;
+        word-wrap: break-word;
+    }
+
+    /* Alert/notification boxes */
+    [role="alert"],
+    .alert,
+    [class*="alert"] {
+        border: 2px solid black !important;
+        padding: 0.5rem;
+        background: white !important;
+        page-break-inside: avoid;
+    }
+
+    /* Ensure backgrounds are visible for important elements */
+    .bg-primary,
+    .bg-success,
+    .bg-warning,
+    .bg-danger {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+
+    /* Score displays */
+    .score,
+    [class*="score"] {
+        font-size: 16pt;
+        font-weight: bold;
+        page-break-inside: avoid;
+    }
+
+    /* Sticky elements shouldn't be sticky in print */
+    [class*="sticky"],
+    [class*="fixed"] {
+        position: static !important;
+    }
+
+    /* Remove shadows and animations */
+    * {
+        box-shadow: none !important;
+        text-shadow: none !important;
+        animation: none !important;
+        transition: none !important;
+    }
+}
