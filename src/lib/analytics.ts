@@ -71,7 +71,7 @@ export const trackEvent = (eventName: string, eventData?: Record<string, any>) =
     }
 };
 
-// --- Compatibility Helpers (matching old Matomo interface where possible) ---
+// --- Compatibility Helpers ---
 
 export const trackAssessmentStarted = (level: 'essential' | 'recommended' | 'advanced') => {
     trackEvent('Assessment Started', { level });

@@ -1,7 +1,7 @@
 import { Github, Mail } from "lucide-react";
 
 const Footer = () => {
-  const currentYear = new Date().getFullYear();
+  const currentYear = '2025';
 
   return (
     <footer className="mt-auto border-t border-border bg-muted/30">

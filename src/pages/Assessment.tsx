@@ -11,7 +11,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { useAssessment } from '@/hooks/useAssessment';
 import { toast } from 'sonner';
-import { Upload, HelpCircle } from 'lucide-react';
+import { Upload } from 'lucide-react';
 import * as XLSX from 'xlsx';
 import { CriterionResponse, CriterionStatus } from '@/core/domain/Criterion';
 
@@ -33,7 +33,6 @@ export default function Assessment() {
     updateResponse,
     updateResponses,
     completeAssessment,
-    resumeAssessment,
     saveProgress,
     deleteAssessment
   } = useAssessment(assessmentId || undefined);
