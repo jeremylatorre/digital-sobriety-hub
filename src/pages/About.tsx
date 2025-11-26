@@ -1,7 +1,8 @@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Leaf, Target, Users, Code } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Leaf, Target, Users, Code, ExternalLink, Sparkles } from "lucide-react";
 
 const About = () => {
   return (
@@ -94,6 +95,19 @@ const About = () => {
                   apprendre et adapter le projet à ses besoins. Nous croyons au
                   partage des connaissances et à la collaboration.
                 </CardDescription>
+                <div className="mt-4">
+                  <Button asChild variant="outline">
+                    <a
+                      href="https://github.com/jeremylatorre/digital-sobriety-hub"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-2"
+                    >
+                      <Code className="h-4 w-4" />
+                      Voir le code sur GitHub
+                    </a>
+                  </Button>
+                </div>
               </CardContent>
             </Card>
 
@@ -112,6 +126,36 @@ const About = () => {
                   Consultez notre dépôt GitHub pour plus d'informations sur
                   comment participer.
                 </CardDescription>
+              </CardContent>
+            </Card>
+
+            {/* Alternumia */}
+            <Card className="border-primary/20 bg-primary/5">
+              <CardHeader>
+                <div className="mb-2 flex items-center gap-2">
+                  <Sparkles className="h-5 w-5 text-primary" aria-hidden="true" />
+                  <CardTitle>Accompagnement Professionnel</CardTitle>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <CardDescription className="text-base leading-relaxed">
+                  Besoin d'aller plus loin ? Je propose des services d'accompagnement
+                  sur mesure en <strong>numérique responsable</strong> et <strong>IA frugale</strong>.
+                  Audit, formation, stratégie : construisons ensemble un numérique plus vertueux.
+                </CardDescription>
+                <div className="mt-4">
+                  <Button asChild>
+                    <a
+                      href="https://alternumia.fr/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-2"
+                    >
+                      <ExternalLink className="h-4 w-4" />
+                      Découvrir Alternumia
+                    </a>
+                  </Button>
+                </div>
               </CardContent>
             </Card>
           </div>

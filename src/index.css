@@ -18,21 +18,22 @@ All colors MUST be HSL.
     --popover: 0 0% 100%;
     --popover-foreground: 210 12% 10%;
 
-    /* Natural green primary for sustainability theme */
-    --primary: 142 71% 45%;
+    /* Natural green primary for sustainability theme - Darkened for 8:1 contrast */
+    --primary: 142 71% 25%;
     --primary-foreground: 0 0% 100%;
 
     /* Soft gray secondary */
     --secondary: 210 16% 93%;
     --secondary-foreground: 210 12% 10%;
 
-    /* Muted backgrounds and text */
+    /* Muted backgrounds and text - Darkened text for 8:1 contrast */
     --muted: 210 16% 96%;
-    --muted-foreground: 210 10% 40%;
+    --muted-foreground: 210 10% 25%;
 
-    /* Subtle accent - blue-green */
-    --accent: 174 62% 47%;
-    --accent-foreground: 0 0% 100%;
+    /* Subtle accent - used for hover states (ghost/outline) */
+    /* Light background for high contrast with dark text */
+    --accent: 142 30% 90%;
+    --accent-foreground: 210 12% 10%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
@@ -71,8 +72,8 @@ All colors MUST be HSL.
     --muted: 210 14% 18%;
     --muted-foreground: 210 12% 70%;
 
-    --accent: 174 55% 52%;
-    --accent-foreground: 210 18% 11%;
+    --accent: 210 14% 25%;
+    --accent-foreground: 210 16% 98%;
 
     --destructive: 0 75% 55%;
     --destructive-foreground: 210 16% 93%;
@@ -89,19 +90,19 @@ All colors MUST be HSL.
   @media (prefers-color-scheme: dark) {
     :root:not(.light) {
       --background: 210 18% 11%;
-      --foreground: 210 16% 93%;
+      --foreground: 210 16% 98%;
       --card: 210 16% 14%;
-      --card-foreground: 210 16% 93%;
+      --card-foreground: 210 16% 98%;
       --popover: 210 16% 14%;
-      --popover-foreground: 210 16% 93%;
+      --popover-foreground: 210 16% 98%;
       --primary: 142 65% 55%;
       --primary-foreground: 210 18% 11%;
       --secondary: 210 14% 18%;
-      --secondary-foreground: 210 16% 93%;
+      --secondary-foreground: 210 16% 98%;
       --muted: 210 14% 18%;
-      --muted-foreground: 210 12% 60%;
-      --accent: 174 55% 52%;
-      --accent-foreground: 210 18% 11%;
+      --muted-foreground: 210 12% 70%;
+      --accent: 210 14% 25%;
+      --accent-foreground: 210 16% 98%;
       --destructive: 0 75% 55%;
       --destructive-foreground: 210 16% 93%;
       --border: 210 14% 22%;
@@ -111,26 +112,27 @@ All colors MUST be HSL.
       --tip-border: 210 14% 22%;
     }
   }
-}
 
-@layer base {
-  * {
-    @apply border-border;
-  }
 
-  body {
-    @apply bg-background text-foreground font-sans antialiased;
-    font-feature-settings: "kern" 1;
-  }
+  @layer base {
+    * {
+      @apply border-border;
+    }
 
-  /* Smooth transitions */
-  a,
-  button {
-    transition: var(--transition-smooth);
-  }
+    body {
+      @apply bg-background text-foreground font-sans antialiased;
+      font-feature-settings: "kern" 1;
+    }
 
-  /* Focus states for accessibility */
-  *:focus-visible {
-    @apply outline-none ring-2 ring-ring ring-offset-2 ring-offset-background;
+    /* Smooth transitions */
+    a,
+    button {
+      transition: var(--transition-smooth);
+    }
+
+    /* Focus states for accessibility */
+    *:focus-visible {
+      @apply outline-none ring-2 ring-ring ring-offset-2 ring-offset-background;
+    }
   }
 }

@@ -29,16 +29,16 @@ const Header = () => {
     <>
       <NavLink
         to="/"
-        className="text-sm font-medium text-muted-foreground hover:text-foreground"
-        activeClassName="text-foreground"
+        className="text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground px-3 py-2 rounded-md whitespace-nowrap"
+        activeClassName="bg-accent/50 text-accent-foreground"
         onClick={() => setIsOpen(false)}
       >
         Accueil
       </NavLink>
       <NavLink
         to="/assessment"
-        className="text-sm font-medium text-muted-foreground hover:text-foreground flex items-center gap-1.5"
-        activeClassName="text-foreground"
+        className="text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground px-3 py-2 rounded-md flex items-center gap-1.5 whitespace-nowrap"
+        activeClassName="bg-accent/50 text-accent-foreground"
         onClick={() => setIsOpen(false)}
       >
         Auto-évaluation
@@ -46,16 +46,16 @@ const Header = () => {
       </NavLink>
       <NavLink
         to="/tools"
-        className="text-sm font-medium text-muted-foreground hover:text-foreground"
-        activeClassName="text-foreground"
+        className="text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground px-3 py-2 rounded-md whitespace-nowrap"
+        activeClassName="bg-accent/50 text-accent-foreground"
         onClick={() => setIsOpen(false)}
       >
         Outils
       </NavLink>
       <NavLink
         to="/about"
-        className="text-sm font-medium text-muted-foreground hover:text-foreground"
-        activeClassName="text-foreground"
+        className="text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground px-3 py-2 rounded-md whitespace-nowrap"
+        activeClassName="bg-accent/50 text-accent-foreground"
         onClick={() => setIsOpen(false)}
       >
         À propos
@@ -69,16 +69,16 @@ const Header = () => {
         <>
           <NavLink
             to="/dashboard"
-            className="text-sm font-medium text-muted-foreground hover:text-foreground"
-            activeClassName="text-foreground"
+            className="text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground px-3 py-2 rounded-md whitespace-nowrap"
+            activeClassName="bg-accent/50 text-accent-foreground"
             onClick={() => setIsOpen(false)}
           >
             Tableau de bord
           </NavLink>
           <NavLink
             to="/profile"
-            className="text-sm font-medium text-muted-foreground hover:text-foreground"
-            activeClassName="text-foreground"
+            className="text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground px-3 py-2 rounded-md whitespace-nowrap"
+            activeClassName="bg-accent/50 text-accent-foreground"
             onClick={() => setIsOpen(false)}
           >
             Mon profil
@@ -140,15 +140,13 @@ const Header = () => {
     <header className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 items-center justify-between px-4">
         <NavLink to="/" className="flex items-center gap-2 hover:opacity-80">
-          <img src="/AlterNumIA_light.webp" alt="AlterNumIA Logo" className="h-8 w-auto dark:hidden" />
-          <img src="/AlterNumIA_Darkmode.webp" alt="AlterNumIA Logo" className="h-8 w-auto hidden dark:block" />
-          <span className="text-xl font-semibold hidden sm:inline-block">
+          <span className="text-lg lg:text-xl font-semibold  sm:inline-block whitespace-nowrap">
             Hub Sobriété Numérique
           </span>
         </NavLink>
 
         {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-center gap-6" aria-label="Navigation principale">
+        <nav className="hidden md:flex items-center gap-2 lg:gap-6" aria-label="Navigation principale">
           <NavItems />
           <div className="h-6 w-px bg-border" />
           <AuthButtons />

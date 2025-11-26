@@ -22,7 +22,7 @@ export default function Assessment() {
 
   const [project, setProject] = useState({ name: '', description: '' });
   const [showNewProject, setShowNewProject] = useState(false);
-  const [selectedLevel, setSelectedLevel] = useState<'essential' | 'recommended' | 'advanced'>('advanced');
+  const [selectedLevel, setSelectedLevel] = useState<'essential' | 'recommended' | 'advanced'>('essential');
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const {
