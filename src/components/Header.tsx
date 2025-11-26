@@ -62,6 +62,14 @@ const Header = () => {
           >
             Tableau de bord
           </NavLink>
+          <NavLink
+            to="/profile"
+            className="text-sm font-medium text-muted-foreground hover:text-foreground"
+            activeClassName="text-foreground"
+            onClick={() => setIsOpen(false)}
+          >
+            Mon profil
+          </NavLink>
           <Button
             variant="ghost"
             size="sm"
