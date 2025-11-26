@@ -7,6 +7,7 @@ import Home from "./pages/Home";
 import Assessment from "./pages/Assessment";
 import AssessmentResults from "./pages/AssessmentResults";
 import Tools from "./pages/Tools";
+import About from "./pages/About";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
@@ -47,6 +48,7 @@ const App = () => (
               <Route path="/assessment" element={<Assessment />} />
               <Route path="/assessment-results/:id" element={<AssessmentResults />} />
               <Route path="/tools" element={<Tools />} />
+              <Route path="/about" element={<About />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
               <Route

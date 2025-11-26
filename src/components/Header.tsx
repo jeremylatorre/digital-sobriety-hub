@@ -6,9 +6,22 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useAuth } from "@/contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const navigate = useNavigate();
 
   const { user, logout } = useAuth();
 
@@ -70,16 +83,37 @@ const Header = () => {
           >
             Mon profil
           </NavLink>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => {
-              logout();
-              setIsOpen(false);
-            }}
-          >
-            Déconnexion
-          </Button>
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button
+                variant="outline"
+                size="sm"
+                className="border-primary/20 hover:border-primary/50 hover:bg-primary/5"
+              >
+                Déconnexion
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Confirmer la déconnexion</AlertDialogTitle>
+                <AlertDialogDescription>
+                  Êtes-vous sûr de vouloir vous déconnecter ?
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Annuler</AlertDialogCancel>
+                <AlertDialogAction
+                  onClick={() => {
+                    logout();
+                    setIsOpen(false);
+                    navigate("/");
+                  }}
+                >
+                  Se déconnecter
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
         </>
       );
     }

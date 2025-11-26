@@ -10,13 +10,13 @@ All colors MUST be HSL.
   :root {
     /* Sober, eco-friendly palette - Light mode */
     --background: 0 0% 100%;
-    --foreground: 210 12% 16%;
+    --foreground: 210 12% 10%;
 
     --card: 0 0% 100%;
-    --card-foreground: 210 12% 16%;
+    --card-foreground: 210 12% 10%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 210 12% 16%;
+    --popover-foreground: 210 12% 10%;
 
     /* Natural green primary for sustainability theme */
     --primary: 142 71% 45%;
@@ -24,11 +24,11 @@ All colors MUST be HSL.
 
     /* Soft gray secondary */
     --secondary: 210 16% 93%;
-    --secondary-foreground: 210 12% 16%;
+    --secondary-foreground: 210 12% 10%;
 
     /* Muted backgrounds and text */
     --muted: 210 16% 96%;
-    --muted-foreground: 210 10% 46%;
+    --muted-foreground: 210 10% 40%;
 
     /* Subtle accent - blue-green */
     --accent: 174 62% 47%;
@@ -54,22 +54,22 @@ All colors MUST be HSL.
   .dark {
     /* Dark mode - maintaining sober aesthetic */
     --background: 210 18% 11%;
-    --foreground: 210 16% 93%;
+    --foreground: 210 16% 98%;
 
     --card: 210 16% 14%;
-    --card-foreground: 210 16% 93%;
+    --card-foreground: 210 16% 98%;
 
     --popover: 210 16% 14%;
-    --popover-foreground: 210 16% 93%;
+    --popover-foreground: 210 16% 98%;
 
     --primary: 142 65% 55%;
     --primary-foreground: 210 18% 11%;
 
     --secondary: 210 14% 18%;
-    --secondary-foreground: 210 16% 93%;
+    --secondary-foreground: 210 16% 98%;
 
     --muted: 210 14% 18%;
-    --muted-foreground: 210 12% 60%;
+    --muted-foreground: 210 12% 70%;
 
     --accent: 174 55% 52%;
     --accent-foreground: 210 18% 11%;
@@ -124,7 +124,8 @@ All colors MUST be HSL.
   }
 
   /* Smooth transitions */
-  a, button {
+  a,
+  button {
     transition: var(--transition-smooth);
   }
 

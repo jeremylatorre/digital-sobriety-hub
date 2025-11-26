@@ -12,6 +12,17 @@ import { Loader2, Plus, Trash2, ExternalLink, PlayCircle, Eye } from 'lucide-rea
 import { toast } from 'sonner';
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 export default function Dashboard() {
     const { user, logout } = useAuth();
@@ -38,8 +49,6 @@ export default function Dashboard() {
     };
 
     const handleDelete = async (id: string) => {
-        if (!confirm('Êtes-vous sûr de vouloir supprimer cette évaluation ?')) return;
-
         try {
             await AssessmentService.deleteAssessment(id);
             setAssessments(assessments.filter(a => a.id !== id));
@@ -88,9 +97,6 @@ export default function Dashboard() {
                             <Plus className="mr-2 h-4 w-4" />
                             Nouvelle évaluation
                         </Button>
-                        <Button variant="outline" onClick={handleLogout}>
-                            Se déconnecter
-                        </Button>
                     </div>
                 </div>
 
@@ -131,7 +137,13 @@ export default function Dashboard() {
                                         </div>
                                     </div>
                                     <div className="flex items-center gap-2 mt-2">
-                                        <Badge variant="outline" className="text-xs">
+                                        <Badge
+                                            variant={
+                                                assessment.level === 'essential' ? 'essential' :
+                                                    assessment.level === 'recommended' ? 'recommended' : 'advanced'
+                                            }
+                                            className="text-xs"
+                                        >
                                             {assessment.level === 'essential' ? 'Light' :
                                                 assessment.level === 'recommended' ? 'Standard' : 'Full'}
                                         </Badge>
@@ -160,15 +172,35 @@ export default function Dashboard() {
                                     </div>
                                 </CardContent>
                                 <CardFooter className="flex justify-between pt-4 border-t">
-                                    <Button
-                                        variant="ghost"
-                                        size="sm"
-                                        className="text-destructive hover:text-destructive"
-                                        onClick={() => handleDelete(assessment.id)}
-                                    >
-                                        <Trash2 className="h-4 w-4 mr-2" />
-                                        Supprimer
-                                    </Button>
+                                    <AlertDialog>
+                                        <AlertDialogTrigger asChild>
+                                            <Button
+                                                variant="ghost"
+                                                size="sm"
+                                                className="text-destructive hover:text-destructive"
+                                            >
+                                                <Trash2 className="h-4 w-4 mr-2" />
+                                                Supprimer
+                                            </Button>
+                                        </AlertDialogTrigger>
+                                        <AlertDialogContent>
+                                            <AlertDialogHeader>
+                                                <AlertDialogTitle>Supprimer l'évaluation ?</AlertDialogTitle>
+                                                <AlertDialogDescription>
+                                                    Cette action est irréversible. L'évaluation "{assessment.projectName}" sera définitivement supprimée.
+                                                </AlertDialogDescription>
+                                            </AlertDialogHeader>
+                                            <AlertDialogFooter>
+                                                <AlertDialogCancel>Annuler</AlertDialogCancel>
+                                                <AlertDialogAction
+                                                    onClick={() => handleDelete(assessment.id)}
+                                                    className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                                                >
+                                                    Supprimer
+                                                </AlertDialogAction>
+                                            </AlertDialogFooter>
+                                        </AlertDialogContent>
+                                    </AlertDialog>
                                     {!assessment.completed ? (
                                         <Button
                                             size="sm"
