@@ -8,6 +8,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { toast } from 'sonner';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import { Turnstile } from '@marsidev/react-turnstile';
 
 export default function Register() {
     const navigate = useNavigate();
@@ -16,6 +17,11 @@ export default function Register() {
     const [passwordConfirm, setPasswordConfirm] = useState('');
     const [loading, setLoading] = useState(false);
     const [success, setSuccess] = useState(false);
+    const [captchaToken, setCaptchaToken] = useState<string | null>(null);
+
+    // CAPTCHA is only required when site key is configured (production)
+    const turnstileSiteKey = import.meta.env.VITE_TURNSTILE_SITE_KEY;
+    const isCaptchaEnabled = !!turnstileSiteKey;
 
     const handleRegister = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -23,13 +29,29 @@ export default function Register() {
             toast.error('Les mots de passe ne correspondent pas');
             return;
         }
+
+        // Check CAPTCHA if enabled
+        if (isCaptchaEnabled && !captchaToken) {
+            toast.error('Veuillez compléter la vérification CAPTCHA');
+            return;
+        }
+
         setLoading(true);
 
         try {
-            const { error } = await supabase.auth.signUp({
+            const signUpOptions: any = {
                 email,
                 password,
-            });
+            };
+
+            // Include CAPTCHA token if enabled
+            if (isCaptchaEnabled && captchaToken) {
+                signUpOptions.options = {
+                    captchaToken
+                };
+            }
+
+            const { error } = await supabase.auth.signUp(signUpOptions);
 
             if (error) throw error;
 
@@ -38,6 +60,8 @@ export default function Register() {
         } catch (error) {
             console.error(error);
             toast.error("Erreur lors de l'inscription. L'email est peut-être déjà utilisé.");
+            // Reset CAPTCHA on error
+            setCaptchaToken(null);
         } finally {
             setLoading(false);
         }
