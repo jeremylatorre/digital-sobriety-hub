@@ -10,15 +10,26 @@ lerna-debug.log*
 node_modules
 dist
 dist-ssr
-*.local
 
-# Editor directories and files
-.vscode/*
-!.vscode/extensions.json
-.idea
+# Testing
+coverage
+test-results
+playwright-report
+blob-report
+
+# Environment
+.env
+.env.development
+.env.production
+.env.test
+.env*.local
+
+# Tools & IDEs
+.amazonq
+AGENTS.md
+openspec/AGENTS.md
+
+# OS
 .DS_Store
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
+Thumbs.db
+
