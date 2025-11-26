@@ -169,9 +169,10 @@ export class AssessmentService {
     // Calculate level-specific score
     // Filter criteria based on assessment level
     const levelCriteria = criteria.filter((c) => {
+      // Light: only essential criteria
       if (assessmentLevel === 'essential') return c.level === 'essential';
-      if (assessmentLevel === 'recommended') return c.level === 'essential' || c.level === 'recommended';
-      return true; // advanced includes all
+      // Full: all criteria
+      return true;
     });
 
     const levelResponses = responses.filter((r) =>

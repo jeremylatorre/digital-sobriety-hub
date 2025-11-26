@@ -83,11 +83,11 @@ export default function AssessmentResults() {
                   Ajuster les réponses
                 </Link>
               </Button>
-              <Button variant="outline" size="sm" onClick={handleShare} disabled>
+              <Button variant="outline" size="sm" onClick={handleShare} hidden>
                 <Share2 className="h-4 w-4 mr-2" />
                 Partager (bientôt)
               </Button>
-              <Button variant="outline" size="sm" onClick={handleDownload} disabled>
+              <Button variant="outline" size="sm" onClick={handleDownload} hidden>
                 <Download className="h-4 w-4 mr-2" />
                 Exporter PDF (bientôt)
               </Button>

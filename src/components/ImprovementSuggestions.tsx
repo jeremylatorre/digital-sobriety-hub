@@ -72,7 +72,10 @@ export function ImprovementSuggestions({ improvements }: ImprovementSuggestionsP
                       <Badge className={config.className}>{config.label}</Badge>
                     </div>
                     <h4 className="font-semibold">{improvement.title}</h4>
-                    <p className="text-sm text-muted-foreground">{improvement.suggestion}</p>
+                    <div
+                      className="text-sm text-muted-foreground [&_ul]:list-disc [&_ul]:pl-4 [&_p]:mb-2"
+                      dangerouslySetInnerHTML={{ __html: improvement.suggestion }}
+                    />
                   </div>
                 </div>
               </div>

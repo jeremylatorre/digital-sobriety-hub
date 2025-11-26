@@ -58,11 +58,13 @@ export function AssessmentForm({ referential, responses, initialTheme, initialIn
 
   // Filter criteria based on level
   const filteredCriteria = useMemo(() => {
-    return referential.criteria.filter((c) => {
-      if (level === 'essential') return c.level === 'essential';
-      if (level === 'recommended') return c.level === 'essential' || c.level === 'recommended';
-      return true;
-    });
+    // Light: only essential criteria
+    // Full: all criteria
+    if (level === 'essential') {
+      return referential.criteria.filter((c) => c.level === 'essential');
+    }
+    // For 'advanced' or any other level, return all criteria
+    return referential.criteria;
   }, [referential.criteria, level]);
 
   const criteriaByTheme = useMemo(() => {
@@ -468,17 +470,17 @@ export function AssessmentForm({ referential, responses, initialTheme, initialIn
                     value={currentResponse?.status}
                     onValueChange={(value) => handleStatusChange(value as CriterionStatus)}
                   >
-                    <div className="flex items-center space-x-2 transition-transform duration-200 hover:scale-105">
+                    <div className="flex items-center space-x-2">
                       <RadioGroupItem value="compliant" id="compliant" />
                       <Label htmlFor="compliant" className="cursor-pointer">
                         Conforme
                       </Label>
                     </div>
-                    <div className="flex items-center space-x-2 transition-transform duration-200 hover:scale-105">
+                    <div className="flex items-center space-x-2">
                       <RadioGroupItem value="non-compliant" id="non-compliant" />
                       <Label htmlFor="non-compliant" className="cursor-pointer">Non conforme</Label>
                     </div>
-                    <div className="flex items-center space-x-2 transition-transform duration-200 hover:scale-105">
+                    <div className="flex items-center space-x-2">
                       <RadioGroupItem value="not-applicable" id="not-applicable" />
                       <Label htmlFor="not-applicable" className="cursor-pointer">Non applicable</Label>
                     </div>

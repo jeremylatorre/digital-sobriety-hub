@@ -222,42 +222,34 @@ export default function Assessment() {
                     <p className="text-sm text-muted-foreground">
                       Choisissez le niveau de profondeur (non modifiable après création)
                     </p>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <button
                         type="button"
                         onClick={() => setSelectedLevel('essential')}
-                        className={`p-4 rounded-lg border-2 transition-all text-left ${selectedLevel === 'essential'
+                        className={`p-5 rounded-lg border-2 transition-all text-left ${selectedLevel === 'essential'
                           ? 'border-primary bg-primary/5'
                           : 'border-border hover:border-primary/50'
                           }`}
                       >
-                        <div className="font-semibold text-base mb-1">Light</div>
-                        <div className="text-sm text-muted-foreground">Critères essentiels uniquement</div>
-                        <div className="text-xs text-muted-foreground mt-2">~ 15-20 questions</div>
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => setSelectedLevel('recommended')}
-                        className={`p-4 rounded-lg border-2 transition-all text-left ${selectedLevel === 'recommended'
-                          ? 'border-primary bg-primary/5'
-                          : 'border-border hover:border-primary/50'
-                          }`}
-                      >
-                        <div className="font-semibold text-base mb-1">Standard</div>
-                        <div className="text-sm text-muted-foreground">Essentiels + recommandés</div>
-                        <div className="text-xs text-muted-foreground mt-2">~ 40-50 questions</div>
+                        <div className="font-semibold text-lg mb-2">Light</div>
+                        <div className="text-sm text-muted-foreground mb-3">
+                          Évaluation rapide des critères essentiels
+                        </div>
+                        <div className="text-xs text-muted-foreground">30 questions</div>
                       </button>
                       <button
                         type="button"
                         onClick={() => setSelectedLevel('advanced')}
-                        className={`p-4 rounded-lg border-2 transition-all text-left ${selectedLevel === 'advanced'
+                        className={`p-5 rounded-lg border-2 transition-all text-left ${selectedLevel === 'advanced'
                           ? 'border-primary bg-primary/5'
                           : 'border-border hover:border-primary/50'
                           }`}
                       >
-                        <div className="font-semibold text-base mb-1">Full</div>
-                        <div className="text-sm text-muted-foreground">Tous les critères</div>
-                        <div className="text-xs text-muted-foreground mt-2">~ 78 questions</div>
+                        <div className="font-semibold text-lg mb-2">Full</div>
+                        <div className="text-sm text-muted-foreground mb-3">
+                          Évaluation complète de tous les critères
+                        </div>
+                        <div className="text-xs text-muted-foreground">78 questions</div>
                       </button>
                     </div>
                   </div>
